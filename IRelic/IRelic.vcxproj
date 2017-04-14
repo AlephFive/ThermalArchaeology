@@ -127,7 +127,9 @@
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
+C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;
+C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -196,7 +198,9 @@
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
+C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;
+C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -250,7 +254,9 @@
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
 ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
+C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;
+C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -288,6 +294,10 @@
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscParameterSync.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
   </ItemGroup>
@@ -321,6 +331,8 @@
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscParameterSync.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h" />
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="src\ofApp.h" />
   </ItemGroup>
   <ItemGroup>
