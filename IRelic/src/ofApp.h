@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "Lib\ImagerIPC2.h"
 
 class ofApp : public ofBaseApp{
 

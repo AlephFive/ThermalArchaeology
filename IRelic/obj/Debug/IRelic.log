@@ -1,18 +1,12 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of NetworkingUtils.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\NetworkingUtils.cpp, ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\NetworkingUtils.cpp.
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of UdpSocket.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\UdpSocket.cpp, ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\UdpSocket.cpp.
-obj\Debug\NetworkingUtils.obj : warning LNK4042: object specified more than once; extras ignored
-obj\Debug\UdpSocket.obj : warning LNK4042: object specified more than once; extras ignored
-     Creating library bin\IRelic_debug.lib and object bin\IRelic_debug.exp
+  main.cpp
+  ofApp.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\ofApp.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\ofApp.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\main.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\main.cpp)
   IRelic.vcxproj -> C:\Program Files\OpenFrameworks\apps\ThermalArchaeology\IRelic\bin\IRelic_debug.exe
   IRelic.vcxproj -> bin\IRelic_debug.pdb (Full PDB)
   
   	                   9	C:\Program Files\OpenFrameworks\export\vs\Win32\
-  	    新文件    		 2939392	C:\Program Files\OpenFrameworks\export\vs\Win32\assimp.dll
-  	    新文件    		 1266176	C:\Program Files\OpenFrameworks\export\vs\Win32\fmodex.dll
-  	    新文件    		 1312768	C:\Program Files\OpenFrameworks\export\vs\Win32\fmodexL.dll
-  	    新文件    		 5647872	C:\Program Files\OpenFrameworks\export\vs\Win32\FreeImage.dll
-  	    新文件    		  580608	C:\Program Files\OpenFrameworks\export\vs\Win32\freetype.dll
-  	    新文件    		  237568	C:\Program Files\OpenFrameworks\export\vs\Win32\glut32.dll
-  	    新文件    		 1178624	C:\Program Files\OpenFrameworks\export\vs\Win32\libeay32.dll
-  	    新文件    		  269824	C:\Program Files\OpenFrameworks\export\vs\Win32\ssleay32.dll
-  	    新文件    		   69632	C:\Program Files\OpenFrameworks\export\vs\Win32\Zlib.dll
