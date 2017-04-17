@@ -2,6 +2,8 @@
 
 #include "ofMain.h"
 #include "Lib\ImagerIPC2.h"
+#include "dustParticle.h"
+
 
 class ofApp : public ofBaseApp{
 
@@ -9,6 +11,7 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		void resetParticles();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -21,5 +24,18 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+		
+		
+
+		vector <dustParticle> p;
+		vector <ofPoint> attractPoints;
+		vector <ofPoint> attractPointsWithMovement;
+
+		int indexWhereThereIsInvisibleParticles;
+		int framesProcessed;
+		const int framesPerEmit = 10;
+
+		bool brushDown = false;
 		
 };
