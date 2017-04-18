@@ -2,6 +2,34 @@
 
 #include "ofMain.h"
 #include "Lib\ImagerIPC2.h"
+#include <stdio.h>
+
+#include <math.h>
+
+void InitIPC(void);
+void ReleaseIPC(void);
+void Idle(void);
+void HandleEvents(void);
+void Init(int frameWidth, int frameHeight, int frameDepth);
+BYTE clip(int val);
+void GetBitmap_Limits(short* buf, int FrameSize, short *min, short *max, bool Sigma);
+
+HRESULT WINAPI OnServerStopped(int reason);
+HRESULT WINAPI OnInitCompleted(void);
+HRESULT WINAPI OnFrameInit(int frameWidth, int frameHeight, int frameDepth);
+HRESULT WINAPI OnNewFrame(void * pBuffer, FrameMetadata *pMetadata);
+
+enum ToolStyle { none, knife, brush, dropper };
+
+class Tool {
+public:
+	ToolStyle ID;
+	Tool() { ID = none; }
+	void setToolStyle(int num) { ID = (ToolStyle)num; }
+};
+
+
+
 
 class ofApp : public ofBaseApp{
 
@@ -21,5 +49,22 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
+
+		//Kilo start from here
+
+		/*For Arduino Serial Communication*/
+		ofSerial serial;
+		string str;
+		Tool tool;
+
+		int IRimage_w = 160;
+		int IRimage_h = 120;
+
+		void SerialCom();
+
+
+
+		//Brian start from here
 		
 };
