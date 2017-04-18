@@ -298,6 +298,7 @@ C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;%(AdditionalIncludeDi
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
+    <ClCompile Include="src\communicator.cpp" />
     <ClCompile Include="src\dirtParticle.cpp" />
     <ClCompile Include="src\dustParticle.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -335,6 +336,7 @@ C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;%(AdditionalIncludeDi
     <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
+    <ClInclude Include="src\communicator.h" />
     <ClInclude Include="src\dirtParticle.h" />
     <ClInclude Include="src\dustParticle.h" />
     <ClInclude Include="src\ofApp.h" />

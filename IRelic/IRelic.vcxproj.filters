@@ -91,6 +91,9 @@
     <ClCompile Include="src\dirtParticle.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\communicator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -243,6 +246,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\dirtParticle.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\communicator.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

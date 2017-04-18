@@ -48,7 +48,7 @@ void ofApp::update(){
 	scrapeParticleEffects();
 	
 
-	//dirt effects
+	
 
 
 	
@@ -86,7 +86,7 @@ void ofApp::brushParticleEffects() {
 }
 
 void ofApp::scrapeParticleEffects() {
-	//brush effects
+	//dirt effects
 	for (unsigned int i = 0; i < dirts.size(); i++) {
 		dirts[i].update();
 	}

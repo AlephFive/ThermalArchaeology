@@ -3,9 +3,7 @@
 //------------------------------------------------------------------
 dirtParticle::dirtParticle() {
 
-	timer = 0;
-	isVisible = false;
-	framesProcessed = 0;
+	reset();
 
 }
 
