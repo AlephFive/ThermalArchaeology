@@ -3,6 +3,9 @@
 //------------------------------------------------------------------
 dustParticle::dustParticle() {
 	
+	timer = 0;
+	isVisible = false;
+	
 }
 
 
@@ -19,7 +22,7 @@ void dustParticle::reset() {
 	vel.x = ofRandom(-0.01, 0.01);
 	vel.y = ofRandom(-0.01, 0.01);
 
-	lifespan = 5000;
+	
 	timer = 0;
 
 	frc = ofPoint(0, 0, 0);
@@ -122,3 +125,4 @@ void dustParticle::draw() {
 bool dustParticle::isAlive() {
 	return isVisible;
 }
+

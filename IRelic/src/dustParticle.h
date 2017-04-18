@@ -5,7 +5,7 @@ class dustParticle {
 
 public:
 	dustParticle();
-
+	
 	void reset();
 	void update();
 	void emit();
@@ -38,5 +38,5 @@ public:
 	int g;
 	int b;
 
-
+	
 };
