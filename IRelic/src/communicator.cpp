@@ -12,6 +12,13 @@ void communicator::reset() {
 	nBytesRead = 0;
 	readTime = 0;
 	memset(bytesReadString, 0, 4);
+
+	brushForce = 0.0;
+	knifeForce = 0.0;
+
+	brush = false;
+	knife = false;
+	pip = false;
 }
 
 //------------------------------------------------------------------
@@ -32,13 +39,34 @@ void communicator::update() {
 
 	memcpy(bytesReadString, bytesReturned, 3);
 
-	bSendSerialMessage = false;
 	readTime = ofGetElapsedTimef();
+
+
+
+
 
 }
 
+
+
 bool communicator::isBrushHeld() {
-	return false;
+	return brush;
+}
+
+bool communicator::isKnifeHeld() {
+	return knife;
+}
+
+bool communicator::isPipHeld() {
+	return pip;
+}
+
+int communicator::getBrushForce(){
+	return brushForce;
+}
+
+int communicator::getKnifeForce(){
+	return knifeForce;
 }
 
 
