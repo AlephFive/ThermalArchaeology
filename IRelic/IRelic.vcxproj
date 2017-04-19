@@ -137,6 +137,7 @@ C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;%(AdditionalIncludeDi
       <SubSystem>Console</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Program Files\OpenFrameworks\apps\ThermalArchaeology\IRelic\src\Lib\v120\ImagerIPC2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
     </PostBuildEvent>
