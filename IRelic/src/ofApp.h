@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "Lib\ImagerIPC2.h"
+<<<<<<< HEAD
 #include <stdio.h>
 
 #include <math.h>
@@ -29,6 +30,11 @@ public:
 };
 
 
+=======
+#include "dustParticle.h"
+#include "dirtParticle.h"
+#include "communicator.h"
+>>>>>>> particle-systems
 
 
 class ofApp : public ofBaseApp{
@@ -37,6 +43,13 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
+		
+		void resetTimer();
+
+		void resetParticles();
+		void drawParticles();
+		void brushParticleEffects();
+		void scrapeParticleEffects();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -50,6 +63,7 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
+<<<<<<< HEAD
 
 		//Kilo start from here
 
@@ -66,5 +80,9 @@ class ofApp : public ofBaseApp{
 
 
 		//Brian start from here
+=======
+		
+		
+>>>>>>> particle-systems
 		
 };
