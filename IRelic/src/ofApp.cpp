@@ -1,6 +1,6 @@
 #include "ofApp.h"
 
-<<<<<<< HEAD
+
 //#define POLLING
 #define MAXLEN 1024
 #define SAFE_DELETE(x) { if (x) delete x; x = NULL; }				
@@ -26,6 +26,23 @@ int FrameSize = 19200;
 ofImage IRimage;
 unsigned char* pixels = new unsigned char[FrameSize];
 
+
+vector <dustParticle> dusts;
+vector <dirtParticle> dirts;
+
+int dustIndex;
+int dirtIndex;
+
+communicator com;
+
+float startTime;
+float timer;
+
+bool brushDown;
+bool scrapeDown;
+
+
+
 std::string TCHAR2STRING(TCHAR *STR)
 
 {
@@ -42,35 +59,18 @@ std::string TCHAR2STRING(TCHAR *STR)
 
 }
 
+
+
+
 //--------------------------------------------------------------
 void ofApp::setup(){
-	/*For Arduino Serial Communication*/
-	serial.setup(0, 9600);
-
+	ofSetVerticalSync(true);
 
 	//Init(160, 120, 2);//for ipc frame  w,h,depth
 	/*For IPC Connection*/
 	//SetImagerIPCCount(1);
 	InitIPC();   //这个里面有 init和run
 	SetIPCMode(0, 1);
-=======
-vector <dustParticle> dusts;
-vector <dirtParticle> dirts;
-
-int dustIndex;
-int dirtIndex;
-
-communicator com;
-
-float startTime;
-float timer;
-
-bool brushDown;
-bool scrapeDown;
-
-//--------------------------------------------------------------
-void ofApp::setup(){
-	ofSetVerticalSync(true);
 	
 	//setup particles
 	int numDust = 100;
@@ -94,7 +94,7 @@ void ofApp::setup(){
 	com.reset();
 
 	
->>>>>>> particle-systems
+
 }
 
 //--------------------------------------------------------------
@@ -118,13 +118,13 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-<<<<<<< HEAD
+
 	ofBackground(0, 0, 0); //Set up white background
 	ofSetColor(255, 255, 255); //Set color for image drawing
 	IRimage.draw(0, 0, FrameWidth * 5, FrameHeight * 5); //Draw image
 	ofDrawBitmapString(TCHAR2STRING(labelFrameCounter), 200, 200);
 	//printf("drawing\n");
-=======
+
 	ofBackgroundGradient(ofColor(60, 60, 60), ofColor(10, 10, 10));
 
 	drawParticles();
@@ -132,7 +132,7 @@ void ofApp::draw(){
 
 	
 	ofSetColor(190);
->>>>>>> particle-systems
+
 }
 
 //--------------------------------------------------------------
@@ -194,7 +194,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-<<<<<<< HEAD
+
 /*********************************** FOR   IPC  PROCESSING  ********************************/
 void InitIPC(void)
 {
@@ -396,7 +396,7 @@ BYTE clip(int val)
 {
 	return (val <= 255) ? ((val > 0) ? val : 0) : 255;
 };
-=======
+
 // A class to describe a group of Particles
 // An ArrayList is used to manage the list of Particles 
 
@@ -483,4 +483,4 @@ void ofApp::scrapeParticleEffects() {
 		dirts[dirtIndex].emit();
 	}
 }
->>>>>>> particle-systems
+

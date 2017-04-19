@@ -2,10 +2,15 @@
 
 #include "ofMain.h"
 #include "Lib\ImagerIPC2.h"
-<<<<<<< HEAD
+
 #include <stdio.h>
 
 #include <math.h>
+
+#include "dustParticle.h"
+#include "dirtParticle.h"
+#include "communicator.h"
+
 
 void InitIPC(void);
 void ReleaseIPC(void);
@@ -30,11 +35,8 @@ public:
 };
 
 
-=======
-#include "dustParticle.h"
-#include "dirtParticle.h"
-#include "communicator.h"
->>>>>>> particle-systems
+
+
 
 
 class ofApp : public ofBaseApp{
@@ -63,26 +65,23 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-<<<<<<< HEAD
+
 
 		//Kilo start from here
 
 		/*For Arduino Serial Communication*/
-		ofSerial serial;
+		
 		string str;
 		Tool tool;
 
 		int IRimage_w = 160;
 		int IRimage_h = 120;
 
-		void SerialCom();
+
 
 
 
 		//Brian start from here
-=======
-		
-		
->>>>>>> particle-systems
+
 		
 };
