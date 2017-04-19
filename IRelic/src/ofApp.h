@@ -1,9 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "Lib\ImagerIPC2.h"
-#include "dustParticle.h"
-#include "dirtParticle.h"
+//#include "Lib\ImagerIPC2.h"
+//#include "dustParticle.h"
+//#include "dirtParticle.h"
+#include "communicator.h"
 
 
 class ofApp : public ofBaseApp{
@@ -12,9 +13,11 @@ class ofApp : public ofBaseApp{
 		void setup();
 		void update();
 		void draw();
-		void resetParticles();
+		
 		void resetTimer();
 
+		void resetParticles();
+		void drawParticles();
 		void brushParticleEffects();
 		void scrapeParticleEffects();
 
@@ -30,13 +33,14 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-		vector <dustParticle> dusts;
-		vector <dirtParticle> dirts;
+		//vector <dustParticle> dusts;
+		//vector <dirtParticle> dirts;
 
 		int dustIndex;
 		int dirtIndex;
 
-
+		communicator com;
+		//ofTrueTypeFont font;
 
 		float startTime;
 		float timer;

@@ -4,8 +4,9 @@
 class communicator {
 
 public:
-	communicator(int baud, string port);
+	communicator();
 
+	void setup(int baud, string port);
 	void reset();
 	void update();
 

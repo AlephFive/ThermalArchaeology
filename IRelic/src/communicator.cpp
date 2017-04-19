@@ -1,10 +1,12 @@
 #include "communicator.h"
 
 //------------------------------------------------------------------
-communicator::communicator(int baud, string port) {
-	serial.setup(port, baud);
-
+communicator::communicator() {
 	reset();
+}
+
+void communicator::setup(int baud, string port) {
+	serial.setup(port, baud);
 }
 
 void communicator::reset() {
@@ -13,8 +15,8 @@ void communicator::reset() {
 	readTime = 0;
 	memset(bytesReadString, 0, 4);
 
-	brushForce = 0.0;
-	knifeForce = 0.0;
+	brushForce = 0;
+	knifeForce = 0;
 
 	brush = false;
 	knife = false;
@@ -23,27 +25,66 @@ void communicator::reset() {
 
 //------------------------------------------------------------------
 void communicator::update() {
-	nTimesRead = 0;
-	nBytesRead = 0;
-	int nRead = 0;  // a temp variable to keep count per read
-
-	unsigned char bytesReturned[3];
-
-	memset(bytesReadString, 0, 4);
-	memset(bytesReturned, 0, 3);
-
-	while ((nRead = serial.readBytes(bytesReturned, 3)) > 0) {
-		nTimesRead++;
-		nBytesRead = nRead;
-	};
-
-	memcpy(bytesReadString, bytesReturned, 3);
-
-	readTime = ofGetElapsedTimef();
 
 
+	if (serial.available() >= 6) {
+		unsigned char bytesReturned[6];
+
+		memset(bytesReadString, 0, 7);
+		memset(bytesReturned, 0, 6);
+
+		int nRead = 0;
+		nRead = serial.readBytes(bytesReturned, 6);
+		memcpy(bytesReadString, bytesReturned, 6);
+
+		printf("echo");
+		printf(bytesReadString);
+
+		//identify what tool is being used and parse values as needed
+
+		//xv0000 <- format
+		//x: tool identifying char
+		//v: 1 if is being held, 0 if not
+		//0000: data
+		int value;
+		char tool = bytesReadString[0];
+		bool held = (bytesReadString[1] == 1) ? true : false;
+		int d1 = bytesReadString[2] - '0';
+		int d2 = bytesReadString[3] - '0';
+		int d3 = bytesReadString[4] - '0';
+		int d4 = bytesReadString[5] - '0';
+		if (d1<10&&d2<10&&d3<10&&d4<10) {
+			value = (d1 * 1000) + (d2 * 100) + (d3 * 10) + d4;
+		}
+		else {
+			value = 0;
+			printf("last 4 bytes are not numeric");
+			printf(bytesReadString);
+		}
+		
+		
+		switch (tool) {
+			case 'b':
+				brush = held;
+				brushForce = value;
+				break;
+			case 'k':
+				knife = held;
+				knifeForce = value;
+				break;
+			case 'p':
+				pip = held;
+				break;
+
+			default:
+				//bytes are offset, flush the serial read buffer
+				serial.flush(true, false);
+		
+		}
 
 
+
+	}
 
 }
 

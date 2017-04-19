@@ -4,130 +4,61 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetVerticalSync(true);
-	int numDust = 100;
-	int numDirt = 250;
+	//int numDust = 100;
+	//int numDirt = 250;
 
-	dusts.assign(numDust, dustParticle());
-	dirts.assign(numDirt, dirtParticle());
-	dustIndex = 0;
-	dirtIndex = 0;
+	//dusts.assign(numDust, dustParticle());
+	//dirts.assign(numDirt, dirtParticle());
+	//dustIndex = 0;
+	//dirtIndex = 0;
 
+	/*
 	brushDown = false;
 	scrapeDown = false;
-
-	resetParticles();
+	*/
+	//resetParticles();
 	
 
-	resetTimer();
-}
+	//resetTimer();
 
-void ofApp::resetParticles() {
-	//reset dust
-	for (unsigned int i = 0; i < dusts.size(); i++) {
-		dusts[i].reset();
-	}
+	//com.setup(9600, "COM9");
+	//com.reset();
 
-	//reset dirt
-	for (unsigned int i = 0; i < dirts.size(); i++) {
-		dirts[i].reset();
-	}
-}
-
-void ofApp::resetTimer() {
-	startTime = ofGetElapsedTimeMillis();
-	timer = ofGetElapsedTimeMillis() - startTime;
+	
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
 	
 	
-	timer = ofGetElapsedTimeMillis() - startTime;
+	//timer = ofGetElapsedTimeMillis() - startTime;
 	
-	brushParticleEffects();
-	scrapeParticleEffects();
+	//brushParticleEffects();
+	//scrapeParticleEffects();
 	
-
-	
-
-
+	//com.update();
 	
 
 
+	
 
-}
 
-void ofApp::brushParticleEffects() {
-	//brush effects
-	for (unsigned int i = 0; i < dusts.size(); i++) {
-		dusts[i].update();
-	}
 
-	if (brushDown && timer>80) {
-		bool found = false;
-		resetTimer();
-
-		for (unsigned int i = 0; i < dusts.size(); i++) {
-			if (!dusts[i].isAlive()) {
-				//find index where there is unutilized particle objects
-				dustIndex = i;
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			dusts[0].reset();
-			dustIndex = 0;
-		}
-
-		dusts[dustIndex].emit();
-	}
-}
-
-void ofApp::scrapeParticleEffects() {
-	//dirt effects
-	for (unsigned int i = 0; i < dirts.size(); i++) {
-		dirts[i].update();
-	}
-
-	if (scrapeDown && timer>80) {
-		bool found = false;
-		resetTimer();
-
-		for (unsigned int i = 0; i < dirts.size(); i++) {
-			if (!dirts[i].isAlive()) {
-				//find index where there is unutilized particle objects
-				dirtIndex = i;
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
-			dirts[0].reset();
-			dirtIndex = 0;
-		}
-
-		dirts[dirtIndex].emit();
-	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofBackgroundGradient(ofColor(60, 60, 60), ofColor(10, 10, 10));
 
-	
-	
-	for (unsigned int i = 0; i < dusts.size(); i++) {
-		dusts[i].draw();
-	}
-
-	for (unsigned int i = 0; i < dirts.size(); i++) {
-		dirts[i].draw();
-	}
-
-
+	//drawParticles();
+	/*
+	string toolStatusStr;
+	toolStatusStr += "tool status: \n";
+	toolStatusStr += "brush held: " + ofToString(com.isBrushHeld()) + " " + ofToString(com.getBrushForce()) + "\n";
+	toolStatusStr += "knife held: " + ofToString(com.isKnifeHeld()) + " " + ofToString(com.getKnifeForce()) + "\n";
+	toolStatusStr += "pip held: " + ofToString(com.isPipHeld());
+	font.drawString(toolStatusStr, 50, 100);
+	*/
 	
 	ofSetColor(190);
 }
@@ -194,3 +125,87 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 // A class to describe a group of Particles
 // An ArrayList is used to manage the list of Particles 
 
+/*
+void ofApp::resetParticles() {
+	//reset dust
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].reset();
+	}
+
+	//reset dirt
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].reset();
+	}
+}
+
+void ofApp::drawParticles() {
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].draw();
+	}
+
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].draw();
+	}
+}
+
+void ofApp::resetTimer() {
+	startTime = ofGetElapsedTimeMillis();
+	timer = ofGetElapsedTimeMillis() - startTime;
+}
+
+void ofApp::brushParticleEffects() {
+	//brush effects
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].update();
+	}
+
+	if (brushDown && timer>80) {
+		bool found = false;
+		resetTimer();
+
+		for (unsigned int i = 0; i < dusts.size(); i++) {
+			if (!dusts[i].isAlive()) {
+				//find index where there is unutilized particle objects
+				dustIndex = i;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			dusts[0].reset();
+			dustIndex = 0;
+		}
+
+		dusts[dustIndex].emit();
+	}
+}
+
+void ofApp::scrapeParticleEffects() {
+	//dirt effects
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].update();
+	}
+
+	if (scrapeDown && timer>80) {
+		bool found = false;
+		resetTimer();
+
+		for (unsigned int i = 0; i < dirts.size(); i++) {
+			if (!dirts[i].isAlive()) {
+				//find index where there is unutilized particle objects
+				dirtIndex = i;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			dirts[0].reset();
+			dirtIndex = 0;
+		}
+
+		dirts[dirtIndex].emit();
+	}
+}
+*/
