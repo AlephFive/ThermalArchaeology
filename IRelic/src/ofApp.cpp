@@ -1,28 +1,43 @@
 #include "ofApp.h"
 
+vector <dustParticle> dusts;
+vector <dirtParticle> dirts;
+
+int dustIndex;
+int dirtIndex;
+
+communicator com;
+
+float startTime;
+float timer;
+
+bool brushDown;
+bool scrapeDown;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetVerticalSync(true);
-	//int numDust = 100;
-	//int numDirt = 250;
+	
+	//setup particles
+	int numDust = 100;
+	int numDirt = 250;
 
-	//dusts.assign(numDust, dustParticle());
-	//dirts.assign(numDirt, dirtParticle());
-	//dustIndex = 0;
-	//dirtIndex = 0;
+	dusts.assign(numDust, dustParticle());
+	dirts.assign(numDirt, dirtParticle());
+	dustIndex = 0;
+	dirtIndex = 0;
 
-	/*
 	brushDown = false;
 	scrapeDown = false;
-	*/
-	//resetParticles();
+	
+	resetParticles();
+	resetTimer();
+
 	
 
-	//resetTimer();
-
-	//com.setup(9600, "COM9");
-	//com.reset();
+	//setup comms
+	com.setup(9600, "COM9");
+	com.reset();
 
 	
 }
@@ -31,12 +46,12 @@ void ofApp::setup(){
 void ofApp::update(){
 	
 	
-	//timer = ofGetElapsedTimeMillis() - startTime;
+	timer = ofGetElapsedTimeMillis() - startTime;
 	
-	//brushParticleEffects();
-	//scrapeParticleEffects();
+	brushParticleEffects();
+	scrapeParticleEffects();
 	
-	//com.update();
+	com.update();
 	
 
 
@@ -50,15 +65,9 @@ void ofApp::update(){
 void ofApp::draw(){
 	ofBackgroundGradient(ofColor(60, 60, 60), ofColor(10, 10, 10));
 
-	//drawParticles();
-	/*
-	string toolStatusStr;
-	toolStatusStr += "tool status: \n";
-	toolStatusStr += "brush held: " + ofToString(com.isBrushHeld()) + " " + ofToString(com.getBrushForce()) + "\n";
-	toolStatusStr += "knife held: " + ofToString(com.isKnifeHeld()) + " " + ofToString(com.getKnifeForce()) + "\n";
-	toolStatusStr += "pip held: " + ofToString(com.isPipHeld());
-	font.drawString(toolStatusStr, 50, 100);
-	*/
+	drawParticles();
+	
+
 	
 	ofSetColor(190);
 }
@@ -125,7 +134,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 // A class to describe a group of Particles
 // An ArrayList is used to manage the list of Particles 
 
-/*
+
 void ofApp::resetParticles() {
 	//reset dust
 	for (unsigned int i = 0; i < dusts.size(); i++) {
@@ -208,4 +217,3 @@ void ofApp::scrapeParticleEffects() {
 		dirts[dirtIndex].emit();
 	}
 }
-*/

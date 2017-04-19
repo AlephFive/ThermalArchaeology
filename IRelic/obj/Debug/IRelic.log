@@ -3,4 +3,7 @@ C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.target
   ofApp.cpp
 c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
 c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
-LINK : fatal error LNK1201: error writing to program database 'C:\Program Files\OpenFrameworks\apps\ThermalArchaeology\IRelic\bin\IRelic_debug.pdb'; check for insufficient disk space, invalid path, or insufficient privilege
+  IRelic.vcxproj -> C:\Program Files\OpenFrameworks\apps\ThermalArchaeology\IRelic\bin\IRelic_debug.exe
+  IRelic.vcxproj -> bin\IRelic_debug.pdb (Full PDB)
+  
+  	                   9	C:\Program Files\OpenFrameworks\export\vs\Win32\
