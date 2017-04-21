@@ -1,0 +1,15 @@
+//here the drawing parameters decide the camera view on the whole screen
+		if (RelicImage_w / RelicImage_h > IRimage_w / IRimage_h) {
+			times = RelicImage_h / IRimage_h;
+			//binaryMotion.draw((RelicImage_w - IRimage_w * times) / 2, 0, IRimage_w * times, IRimage_h * times);// this way the view of camera is as big as it can be
+		}
+		else {
+			times = RelicImage_w / IRimage_w;
+			//binaryMotion.draw(0, (RelicImage_h - IRimage_h * times) / 2, IRimage_w * times, IRimage_h * times);// this way the view of camera is as big as it can be
+		}
+	
+		ofxCvGrayscaleImage maskBuffer;
+		maskBuffer = binaryMotion;
+		//maskBuffer = diffFloat;
+		//maskBuffer = bufferFloat;
+		maskBuffer.draw((RelicImage_w - IRimage_w * times) / 2, (RelicImage_h - IRimage_h * times) / 2, IRimage_w * times, IRimage_h * times);
