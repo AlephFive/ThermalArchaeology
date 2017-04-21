@@ -90,7 +90,7 @@ void ofApp::setup(){
 	
 
 	//setup comms
-	com.setup(38400, "COM9");
+	com.setup(38400, "COM10");
 	com.reset();
 
 	

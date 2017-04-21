@@ -68,7 +68,7 @@ void loop() {
   
   uint32_t cur_millis = millis();
   static uint32_t sendData_period = 0;
-  if (throttle_ms(100, cur_millis, &sendData_period)) {
+  if (throttle_ms(50, cur_millis, &sendData_period)) {
     
     readCap();
     message += (isHeld)? "1":"0";
@@ -82,7 +82,7 @@ void loop() {
 
   static uint32_t blink_period = 0;
   if (throttle_ms(1000, cur_millis, &blink_period)) {
-      Serial.print("ping");
+      //Serial.print("ping");
       if(lighton){
         // turn the LED off by making the voltage LOW
         digitalWrite(led, LOW);    
@@ -119,7 +119,7 @@ bool throttle_ms(uint32_t period_ms, uint32_t cur_time, uint32_t *prev_period) {
 
 void readCap(){
   capValue = heldValue.capacitiveSensor(30);
-    if(capValue < 3000){
+    if(capValue < 1000){
       isHeld = false;
     }
     else{
