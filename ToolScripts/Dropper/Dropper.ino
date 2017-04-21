@@ -15,7 +15,7 @@
 int led = 13;
 int capRcv = 2;
 int capSend = 11;
-int flexPin = A1;
+
 
 int heatPin1 = 9;
 int heatPin2 = 7;
@@ -24,9 +24,9 @@ long capValue;
 String message;
 String valueStr;
 //brush
-String toolChar = "b";
+String toolChar = "p";
 
-int flexValue;
+
 
 int recived;
 
@@ -41,7 +41,7 @@ void setup() {
   lighton = true;
   isHeld = false;
   recived = 0;
-  flexValue = 0;
+
 
   capValue = 0;
   message = toolChar;
@@ -73,8 +73,7 @@ void loop() {
     readCap();
     message += (isHeld)? "1":"0";
     
-    readFlex();
-    message += valueStr;
+    message += "0000";
 
     Serial.print(message);
     message = toolChar;
@@ -125,34 +124,5 @@ void readCap(){
     }
     else{
       isHeld = true;
-    }
-}
-
-void readFlex(){
-  flexValue = analogRead(A1);
-  valueStr = String(flexValue);
-
-    switch(valueStr.length()){
-      case 4:
-      
-      break;
-      case 3:
-        valueStr = "0" + valueStr;
-      break;
-      case 2:
-        valueStr = "00" + valueStr;
-      break;
-      case 1:
-        valueStr = "000" + valueStr;
-      break;
-      default:
-        if(valueStr.length()>4){
-          valueStr = "high";
-        }
-        else if(valueStr.length() == 0){
-          valueStr = "loww";
-        }
-        
-       
     }
 }

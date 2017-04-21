@@ -24,7 +24,7 @@ long capValue;
 String message;
 String valueStr;
 //brush
-String toolChar = "b";
+String toolChar = "k";
 
 int flexValue;
 
