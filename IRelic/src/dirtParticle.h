@@ -41,5 +41,7 @@ public:
 	int g;
 	int b;
 
+	bool goodVel;
+
 
 };

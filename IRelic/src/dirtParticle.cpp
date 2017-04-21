@@ -21,7 +21,7 @@ void dirtParticle::reset() {
 	vel.x = ofRandom(-0.01, 0.01);
 	vel.y = ofRandom(-0.01, 0.01);
 
-
+	goodVel = false;
 	timer = 0;
 
 	frc = ofPoint(0, 5, 0);
@@ -36,9 +36,9 @@ void dirtParticle::reset() {
 	vel.y = fabs(vel.y) * 1.02; //make the particles all be going down
 
 
-	r = (int)ofRandom(140, 160);
-	g = (int)ofRandom(100, 120);
-	b = (int)ofRandom(60, 70);
+	r = (int)ofRandom(150, 160);
+	g = (int)ofRandom(100, 110);
+	b = (int)ofRandom(60, 65);
 
 }
 
@@ -48,16 +48,17 @@ void dirtParticle::update() {
 	//1 - APPLY THE FORCES 
 	if (isVisible) {
 		framesProcessed++;
-
-		if (framesProcessed == 50) {
+		
+		if (framesProcessed == 20) {
 			//find mouse velocity vector
 			mousePos.x = ofGetMouseX();
 			mousePos.y = ofGetMouseY();
 			vel = (origin - mousePos)*-0.1;
+			goodVel = (vel.length() > 1) ? true : false;
 			//vel.x = ofSignedNoise(uniqueVal, mousePos.y * 0.001, ofGetElapsedTimef()*0.2);
 			//vel.y = ofSignedNoise(uniqueVal, mousePos.x * 0.001, ofGetElapsedTimef()*0.2);
 		}
-		else if (framesProcessed > 50) {
+		else if (framesProcessed > 20 && goodVel) {
 			
 
 			
@@ -91,7 +92,9 @@ void dirtParticle::update() {
 				vel.y *= -1.0;
 			}
 		}
-		
+		else if (framesProcessed > 20 && !goodVel) {
+			isVisible = false;
+		}
 	}
 }
 
@@ -108,7 +111,7 @@ void dirtParticle::emit() {
 //------------------------------------------------------------------
 void dirtParticle::draw() {
 
-	if (isVisible) {
+	if (isVisible && goodVel) {
 		//if at end of lifespan, set isVisible to false
 		float timer = ofGetElapsedTimeMillis();
 		if (timer >= lifeEnd && isVisible) {

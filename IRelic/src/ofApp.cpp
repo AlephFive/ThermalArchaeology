@@ -125,13 +125,13 @@ void ofApp::draw(){
 	ofDrawBitmapString(TCHAR2STRING(labelFrameCounter), 200, 200);
 	//printf("drawing\n");
 
-	ofBackgroundGradient(ofColor(60, 60, 60), ofColor(10, 10, 10));
+	//ofBackgroundGradient(ofColor(60, 60, 60), ofColor(10, 10, 10));
 
 	drawParticles();
 	
 
 	
-	ofSetColor(190);
+	//ofSetColor(190);
 
 }
 

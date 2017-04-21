@@ -39,6 +39,7 @@ void communicator::update() {
 
 		printf("echo");
 		printf(bytesReadString);
+		printf("\n");
 
 		//identify what tool is being used and parse values as needed
 
@@ -58,8 +59,10 @@ void communicator::update() {
 		}
 		else {
 			value = 0;
-			printf("last 4 bytes are not numeric");
+			printf("last 4 bytes are not numeric \n");
 			printf(bytesReadString);
+			printf("\n");
+			serial.flush(true, false);
 		}
 		
 		
