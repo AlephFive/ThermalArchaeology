@@ -94,9 +94,9 @@ public:
 	ofTrueTypeFont  font;
 	float thres1;//for knife
 	float thres2;//for brush
-	float workingPercent;
-	float healthPercent;
-	float toolparaPercent;
+	float workingPercent = 0.0;
+	float healthPercent = 1.0;
+	float toolparaPercent = 0.0;
 	const int healthBarWidth = 800;
 	const int workingBarWidth = 300;
 	const int toolparaBarWidth = 300;
@@ -193,9 +193,9 @@ class ofApp : public ofBaseApp{
 		void ToolSwitchDraw();
 
 		/***************************************   Game Logic   ********************************************/
-		bool stepend;
-		bool firsttimehere;
-		bool firsttimeend;
+		bool stepend=false;
+		bool firsttimehere=true;
+		bool firsttimeend=false;
 		//int GameStage;
 		GameStage stage;
 		RelicType relic;
@@ -215,26 +215,28 @@ class ofApp : public ofBaseApp{
 		
 		/************************************   Game Data    ***************************************/
 		const float healthTotal = 5000;
-		float healthLeft;
+		float healthLeft=5000;
 		int workingTotal[5] = { 4151,4151,1449,1449,4151 };
-		int workingLeft;
+		int workingLeft=1000;
 
 
-		float forceTotal = 100;
-		float currentForce;
-		float safeThres1 = 70;
+		float forceTotal1= 30;
+		float forceTotal2 = 100;
+		float currentForce=0;
+		float safeThres1 = 15;
 		float safeThres2 = 50;
-		void setForce(float total, float thres1, float thres2) {
-			forceTotal = total;
+		void setForce(float total1,float total2, float thres1, float thres2) {
+			forceTotal1 = total1;
+			forceTotal2 = total2;
 			safeThres1 = thres1;
 			safeThres2 = thres2;
 		}
 		float timeLimit = 60.0; //60 seconds
-		float starttime;
-		float timer;
+		float starttime=0;
+		float timer=0;
 		float changingtimeLimit = 2000;//2seconds 2000millisecs
-		float changingstarttime;
-		float changingtimer;
+		float changingstarttime=0;
+		float changingtimer=0;
 		
 		/****************************************    Button    ********************************************/
 

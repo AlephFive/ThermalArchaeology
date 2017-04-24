@@ -87,11 +87,14 @@ void ofApp::setup(){
 
 	/*********************game data setup**********************/
 
+	caitao.setup(5, "caitao", caitao_toollist);
+
+	setForce(30, 15, 100, 50);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
 
 	/****************widgets setup******************/
 	// should be after the data setup
 	caitaoWidgets.setup();
-	caitaoWidgets.setThres(safeThres1 / forceTotal, safeThres2 / forceTotal);
+	caitaoWidgets.setThres(safeThres1 / forceTotal1, safeThres2 / forceTotal2);
 	ToolSwitchSetup();
 
 
@@ -123,7 +126,7 @@ void ofApp::setup(){
 #endif
 
 	/******************          image loading           *****************/
-	startbackground.loadImage("a1.jpg");//should be startbackground.png
+	startbackground.loadImage("startbackground.png");//should be startbackground.png
 	endbackground.loadImage("interface/endbackground.png");
 	gameoverbackground.loadImage("interface/gameoverbackground.png");
 
@@ -195,10 +198,10 @@ void ofApp::update(){
 	case START: {
 		//getSwitchStage();
 		if (getButtonState(ButtonStart)) {
-			/**********Game setup***********/
-			caitao.setup(5, "caitao", caitao_toollist);
+			
 			//----------------------------------------
 			stage = PROCESS;
+			caitao.currentStep = 0;
 			healthLeft = healthTotal;
 			workingLeft = workingTotal[0];
 		}
@@ -221,24 +224,27 @@ void ofApp::update(){
 
 			if (caitao.Toollist[caitao.currentStep] == dropper) { timer = ofGetElapsedTimef(); }
 
-			ToolSwitchUpdate();
+			ToolSwitchUpdate();//Brian part
+
 
 			if (ToolNow == caitao.Toollist[caitao.currentStep]) { //If user is not using the right tool,then nothing updates.
 				maskShaderUpdate();//workingleft is calculated here.
 			}
-			caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0);
-			caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0);
-			if (caitao.Toollist[caitao.currentStep] != dropper) {
-				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal, 0.0, 1.0);
-				if (Moved) {
-					if (caitao.Toollist[caitao.currentStep] == knife && currentForce > safeThres1) { healthLeft = healthLeft - 1; }//如果力大于thres1 用刀 并且 motion有数
-					if (caitao.Toollist[caitao.currentStep] == brush && currentForce > safeThres2) { healthLeft = healthLeft - 1; }//如果力大于thres2 用刷 并且 motion有数
-				}
+			
+			if (caitao.Toollist[caitao.currentStep] == knife) {
+				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal1, 0.0, 1.0);
+				if (Moved && currentForce > safeThres1) { healthLeft = healthLeft - 1; }//如果力大于thres1 用刀 并且 motion有数
+			}
+			else if (caitao.Toollist[caitao.currentStep] == brush) {
+				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal2, 0.0, 1.0);
+				if (Moved  && currentForce > safeThres2) { healthLeft = healthLeft - 1; }//如果力大于thres2 用刷 并且 motion有数
 			}
 			else {
 				caitaoWidgets.toolparaPercent = ofMap(timeLimit - timer + starttime, 0.0, timeLimit, 0.0, 1.0);
 				if (caitaoWidgets.toolparaPercent < 0.001) { healthLeft = healthLeft - 1; }
 			}
+			caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0);
+			caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0);
 			if (healthLeft < 1) {//gameover
 				screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
 				stage = GAMEOVER;
