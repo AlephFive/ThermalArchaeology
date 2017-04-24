@@ -82,7 +82,7 @@ std::string TCHAR2STRING(TCHAR *STR)
 
 
 //--------------------------------------------------------------
-void ofApp::setup(){
+void ofApp::setup() {
 	ofSetVerticalSync(true);
 
 	/*********************game data setup**********************/
@@ -124,13 +124,16 @@ void ofApp::setup(){
 		shaderMotion.load("shadersGL2/shaderMotion");
 	}
 #endif
-
+	shiftx = 160;
+	shifty = 0;
+	times = 6;
 	/******************          image loading           *****************/
-	startbackground.loadImage("startbackground.png");//should be startbackground.png
+	startbackground.loadImage("interface/startbackground.png");//should be startbackground.png
 	endbackground.loadImage("interface/endbackground.png");
 	gameoverbackground.loadImage("interface/gameoverbackground.png");
 
-
+	backgroundImage.loadImage("caitao/1.jpg");
+	foregroundImage.loadImage("caitao/0.jpg");
 
 	//pixelBuffer.allocate(FrameWidth, FrameHeight, OF_IMAGE_GRAYSCALE);
 	for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }
@@ -163,9 +166,9 @@ void ofApp::setup(){
 
 	//deferfps = 0;
 	ofEnableAlphaBlending();
+
+
 	
-
-
 
 	//============Brian==================
 	//setup particles
@@ -179,142 +182,146 @@ void ofApp::setup(){
 
 	brushDown = false;
 	scrapeDown = false;
-	
+
 	resetParticles();
 	resetTimer();
 
 	//setup comms
 	com.setup(38400, "COM10");
 	com.reset();
-
 	
+
 
 }
 
 //--------------------------------------------------------------
-void ofApp::update(){
+void ofApp::update() {
 	IRtoMotion(IRimage, IRimagePrev);
-	switch (stage) {
-	case START: {
-		//getSwitchStage();
-		if (getButtonState(ButtonStart)) {
-			
-			//----------------------------------------
-			stage = PROCESS;
-			caitao.currentStep = 0;
-			healthLeft = healthTotal;
-			workingLeft = workingTotal[0];
+	//if (binaryMotion.bAllocated) {
+	//	maskShaderUpdate();
+	//}
+	if (binaryMotion.bAllocated) {
+		switch (stage) {
+		case START: {
+			//getSwitchStage();
+			if (getButtonState(ButtonStart)) {
+
+				//----------------------------------------
+				stage = PROCESS;
+				caitao.currentStep = 0;
+				healthLeft = healthTotal;
+				workingLeft = workingTotal[0];
+			}
 		}
-	}
-	case PROCESS: {
-		if (!stepend) {
+		case PROCESS: {
+			if (!stepend) {
 
 
-			if (firsttimehere) { //update the step data
-				workingLeft = workingTotal[caitao.currentStep];
-				caitaoWidgets.update(caitao, stepend);
-				backgroundImage = caitao.ProcessImages[caitao.currentStep + 1];
-				foregroundImage = caitao.ProcessImages[caitao.currentStep];
+				if (firsttimehere) { //update the step data
+					workingLeft = workingTotal[caitao.currentStep];
+					caitaoWidgets.update(caitao, stepend);
+					backgroundImage = caitao.ProcessImages[caitao.currentStep + 1];
+					foregroundImage = caitao.ProcessImages[caitao.currentStep];
 
-				for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }//clean the pixel Buffer for recording a new step motion
-				if (caitao.Toollist[caitao.currentStep] == dropper) { starttime = ofGetElapsedTimef(); }
-				firsttimehere = false;
-			}
-
-
-			if (caitao.Toollist[caitao.currentStep] == dropper) { timer = ofGetElapsedTimef(); }
-
-			ToolSwitchUpdate();//Brian part
+					for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }//clean the pixel Buffer for recording a new step motion
+					if (caitao.Toollist[caitao.currentStep] == dropper) { dropperstarttime = ofGetElapsedTimef(); }
+					firsttimehere = false;
+				}
 
 
-			if (ToolNow == caitao.Toollist[caitao.currentStep]) { //If user is not using the right tool,then nothing updates.
-				maskShaderUpdate();//workingleft is calculated here.
-			}
-			
-			if (caitao.Toollist[caitao.currentStep] == knife) {
-				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal1, 0.0, 1.0);
-				if (Moved && currentForce > safeThres1) { healthLeft = healthLeft - 1; }//如果力大于thres1 用刀 并且 motion有数
-			}
-			else if (caitao.Toollist[caitao.currentStep] == brush) {
-				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal2, 0.0, 1.0);
-				if (Moved  && currentForce > safeThres2) { healthLeft = healthLeft - 1; }//如果力大于thres2 用刷 并且 motion有数
+				if (caitao.Toollist[caitao.currentStep] == dropper) { droppertimer = ofGetElapsedTimef(); }
+
+				ToolSwitchUpdate();//Brian part
+
+
+				if (ToolNow == caitao.Toollist[caitao.currentStep]) { //If user is not using the right tool,then nothing updates.
+					maskShaderUpdate();//workingleft is calculated here.
+				}
+
+				if (caitao.Toollist[caitao.currentStep] == knife) {
+					caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal1, 0.0, 1.0);
+					if (Moved && currentForce > safeThres1) { healthLeft = healthLeft - 1; }//如果力大于thres1 用刀 并且 motion有数
+				}
+				else if (caitao.Toollist[caitao.currentStep] == brush) {
+					caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal2, 0.0, 1.0);
+					if (Moved  && currentForce > safeThres2) { healthLeft = healthLeft - 1; }//如果力大于thres2 用刷 并且 motion有数
+				}
+				else {
+					caitaoWidgets.toolparaPercent = ofMap(timeLimit - droppertimer + dropperstarttime, 0.0, timeLimit, 0.0, 1.0);
+					if (caitaoWidgets.toolparaPercent < 0.001) { healthLeft = healthLeft - 1; }
+				}
+				caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0);
+				caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0);
+				if (healthLeft < 1) {//gameover
+					screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+					stage = GAMEOVER;
+				}
+				if (caitaoWidgets.workingPercent > 0.9) {
+					stepend = true;
+					firsttimeend = true;
+				}
+
+
 			}
 			else {
-				caitaoWidgets.toolparaPercent = ofMap(timeLimit - timer + starttime, 0.0, timeLimit, 0.0, 1.0);
-				if (caitaoWidgets.toolparaPercent < 0.001) { healthLeft = healthLeft - 1; }
-			}
-			caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0);
-			caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0);
-			if (healthLeft < 1) {//gameover
-				screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-				stage = GAMEOVER;
-			}
-			if (caitaoWidgets.workingPercent > 0.9) {
-				stepend = true;
-				firsttimeend = true;
-			}
 
 
-		}
-		else {
-
-
-			if (firsttimeend) {
-				caitaoWidgets.update(caitao, stepend);
-				changingstarttime = ofGetElapsedTimeMillis();
-				firsttimeend = false;
-			}
-			changingtimer = ofGetElapsedTimeMillis();
-			if (changingtimer - changingstarttime > changingtimeLimit) {
-				caitao.currentStep++;
-				firsttimehere = true;
-				stepend = false;
-				if (caitao.currentStep > 4) {
-					stage = END;
+				if (firsttimeend) {
+					caitaoWidgets.update(caitao, stepend);
+					changingstarttime = ofGetElapsedTimeMillis();
+					firsttimeend = false;
 				}
+				changingtimer = ofGetElapsedTimeMillis();
+				if (changingtimer - changingstarttime > changingtimeLimit) {
+					caitao.currentStep++;
+					firsttimehere = true;
+					stepend = false;
+					if (caitao.currentStep > 4) {
+						stage = END;
+					}
+				}
+
+
 			}
-
-
+		}
+		case END: {
+			if (getButtonState(ButtonRestartend)) {
+				stage = START;
+			}
+		}
+		case GAMEOVER: {
+			if (getButtonState(ButtonRestartgameover)) {
+				stage = START;
+			}
+		}
 		}
 	}
-	case END: {
-		if (getButtonState(ButtonRestartend)) {
-			stage = START;
-		}
-	}
-	case GAMEOVER: {
-		if (getButtonState(ButtonRestartgameover)) {
-			stage = START;
-		}
-	}
-	}
-	
 
 
 
 	//===================Brian=============================
 	timer = ofGetElapsedTimeMillis() - startTime;
-	
+
 	brushParticleEffects();
 	scrapeParticleEffects();
-	
+
 	com.update();
-	
 
 
-	
+
+
 
 
 
 }
 
 //--------------------------------------------------------------
-void ofApp::draw(){
+void ofApp::draw() {
 
 	ofBackground(0, 0, 0); //Set up white background
 	ofSetColor(255, 255, 255); //Set color for image drawing
 
-
+	
 
 	switch (stage) {
 	case START: {
@@ -342,10 +349,15 @@ void ofApp::draw(){
 	}
 	}
 
-
+	
 
 	//----------------------------------------------------------
 	//Here is For Test 
+
+	//// FIRST draw the background image
+	//foregroundImage.draw(0, 0);
+	//// THEN draw the masked fbo on top
+	//fbo.draw(0, 0);
 
 	MotionDraw();
 	existFbo.draw(0, 4 * IRimage_h);
@@ -362,10 +374,10 @@ void ofApp::draw(){
 
 
 	//=================Brian======================
-	drawParticles();
-	
+	//drawParticles();
 
-	
+
+
 	//ofSetColor(190);
 
 }
@@ -375,61 +387,61 @@ void ofApp::exit() {
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key){
+void ofApp::keyPressed(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::keyReleased(int key){
+void ofApp::keyReleased(int key) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y ){
+void ofApp::mouseMoved(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseDragged(int x, int y, int button){
+void ofApp::mouseDragged(int x, int y, int button) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button){
+void ofApp::mousePressed(int x, int y, int button) {
 	//brushDown = true;
 	scrapeDown = true;
-	
+
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseReleased(int x, int y, int button){
+void ofApp::mouseReleased(int x, int y, int button) {
 	//brushDown = false;
 	scrapeDown = false;
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseEntered(int x, int y){
+void ofApp::mouseEntered(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::mouseExited(int x, int y){
+void ofApp::mouseExited(int x, int y) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::windowResized(int w, int h){
+void ofApp::windowResized(int w, int h) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::gotMessage(ofMessage msg){
+void ofApp::gotMessage(ofMessage msg) {
 
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
@@ -438,31 +450,45 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 void ofApp::ButtonSetup()
 {
-	ButtonStart.setposition(ofGetWindowSize().x / 2 - 100, ofGetWindowSize().y / 2 - 50, 200, 100);
+
 	ButtonStart.icon.loadImage("interface/start.png");
+	ButtonStart.setposition(ofGetWindowWidth() / 2 - ButtonStart.icon.getWidth() / 2, ofGetWindowHeight() - 80 - ButtonStart.icon.getHeight(), ButtonStart.icon.getWidth(), ButtonStart.icon.getHeight());
 	ButtonStart.name = "Start";
-	ButtonStart.toucharea.set((ButtonStart.x + ButtonStart.w / 2) / 6, (ButtonStart.y + ButtonStart.h / 2) / 6);
-	ButtonRestartpro.setposition(190, 30, 30, 30);
+	ButtonStart.toucharea.set((ButtonStart.x + ButtonStart.w / 2 - shiftx) / 6, (ButtonStart.y + ButtonStart.h / 2 - shifty) / 6);
+
 	ButtonRestartpro.icon.loadImage("interface/restart.png");
+	ButtonRestartpro.setposition(shiftx + 30, shifty + 30, ButtonRestartpro.icon.getWidth(), ButtonRestartpro.icon.getHeight());
 	ButtonRestartpro.name = "Restart";
-	ButtonRestartpro.toucharea.set((ButtonRestartpro.x + ButtonRestartpro.w / 2) / 6, (ButtonRestartpro.y + ButtonRestartpro.h / 2) / 6);
+	ButtonRestartpro.toucharea.set((ButtonRestartpro.x + ButtonRestartpro.w / 2 - shiftx) / 6, (ButtonRestartpro.y + ButtonRestartpro.h / 2 - shifty) / 6);
 	//	ButtonHelp.setposition(ofGetWindowSize().x / 2, ofGetWindowSize().y / 2, 200, 100);
 	//	ButtonHelp.icon.loadImage("interface/help.png");
 	//	ButtonHelp.name = "Help";
-	ButtonRestartend.setposition(ofGetWindowSize().x / 2 - 100, ofGetWindowSize().y / 2 - 50, 200, 100);
-	ButtonRestartend.icon.loadImage("interface/restartend.png");
+	ButtonRestartend.icon.loadImage("interface/restartgameover.png");
+	ButtonRestartend.setposition(ofGetWindowWidth() / 2 - ButtonRestartend.icon.getWidth() / 2, 528 - ButtonRestartend.icon.getHeight() / 2, ButtonRestartend.icon.getWidth(), ButtonRestartend.icon.getHeight());
 	ButtonRestartend.name = "Restart";
-	ButtonRestartend.toucharea.set((ButtonRestartend.x + ButtonRestartend.w / 2) / 6, (ButtonRestartend.y + ButtonRestartend.h / 2) / 6);
-	ButtonRestartgameover.setposition(ofGetWindowSize().x / 2 - 100, ofGetWindowSize().y / 2 - 50, 200, 100);
+	ButtonRestartend.toucharea.set((ButtonRestartend.x + ButtonRestartend.w / 2 - shiftx) / 6, (ButtonRestartend.y + ButtonRestartend.h / 2 - shifty) / 6);
+
+
 	ButtonRestartgameover.icon.loadImage("interface/restartgameover.png");
+	ButtonRestartgameover.setposition(ofGetWindowWidth() / 2 - ButtonRestartgameover.icon.getWidth() / 2, 528 - ButtonRestartgameover.icon.getHeight() / 2, ButtonRestartgameover.icon.getWidth(), ButtonRestartgameover.icon.getHeight());
 	ButtonRestartgameover.name = "Restart";
-	ButtonRestartgameover.toucharea.set((ButtonRestartend.x + ButtonRestartend.w / 2) / 6, (ButtonRestartend.y + ButtonRestartend.h / 2) / 6);
+	ButtonRestartgameover.toucharea.set((ButtonRestartgameover.x + ButtonRestartgameover.w / 2 - shiftx) / 6, (ButtonRestartgameover.y + ButtonRestartgameover.h / 2 - shifty) / 6);
 }
 bool ofApp::getButtonState(button bu) {
-	ofPixels temp = binaryMotion.getPixels();
-	//unsigned char value;
-	if (temp[(int)(bu.toucharea.x + bu.toucharea.y * 120)] > 0) { return true; }
-	else { return false; }
+
+	if (binaryMotion.bAllocated) {
+		ofPixels temp = binaryMotion.getPixels();
+
+		//unsigned char value;
+		int pixNo = (int)(bu.toucharea.x + bu.toucharea.y * 160);
+		if (pixNo > FrameSize - 1) { printf("Array Bounds Write! Error!\n"); return false; }//
+		if (temp[pixNo] > 0) { return true; }
+		else { return false; }
+	}
+	else
+	{
+		return false;
+	}
 
 }
 
@@ -570,20 +596,22 @@ void ofApp::maskShaderUpdate()
 
 					 //------------------------------------------------------------------------
 					 // we need to accumulate the motion areas .here we store all the motions into existFbo
-	ofxCvGrayscaleImage abc;
+//	ofxCvGrayscaleImage abc;
 	/*
 	abc = IRimage;
 	abc.threshold(IRthreshold);
 
 	*/
-	abc = binaryMotion;
-
-	ofPixels ab = abc.getPixels();
+	//	abc = binaryMotion;
+	ofPixels ab;
+	//ab.allocate(160, 120,OF_IMAGE_GRAYSCALE);
+	ab = binaryMotion.getPixels();
 
 	//unsigned char value;
 	int counter = 0;
 	for (int i = 0; i < FrameSize; i++) {
 		if (pixelBuffer[i] < ab[i]) {
+			//printf("ab[i]  %d\n",ab[i]);
 			pixelBuffer[i] = ab[i];
 			if (caitao.OutlineImages[caitao.currentStep].getPixels()[i] > 0)
 			{
@@ -602,7 +630,7 @@ void ofApp::maskShaderUpdate()
 	//----------------------------------------------------------
 	//then draw 160-120 size existFbo expand it "times" times and put it on the middletop of maskFbo
 	maskFbo.begin();
-	ofClear(0, 0, 0, 0);
+	//ofClear(0, 0, 0, 0);
 	existFbo.draw(160, 0, IRimage_w * times, IRimage_h * times);
 	maskFbo.end();
 	//----------------------------------------------------------
@@ -619,7 +647,7 @@ void ofApp::maskShaderUpdate()
 
 	shaderMask.end();
 	fbo.end();
-	ofEnableAlphaBlending();
+	//ofEnableAlphaBlending();
 
 }
 void ofApp::MotionDraw()
@@ -646,7 +674,7 @@ void Process::setup(int stepsnum, string imgfolder, int *toollist) {
 	currentStep = 0;
 	string imgdirectory;
 	ofImage temp;
-	for (int i = 0; i<TotalImgsNum; i++)
+	for (int i = 0; i < TotalStepsNum; i++)
 	{
 		imgdirectory = imgfolder + "/" + ofToString(i) + ".jpg";
 		temp.loadImage(imgdirectory);
@@ -654,11 +682,14 @@ void Process::setup(int stepsnum, string imgfolder, int *toollist) {
 		imgdirectory = imgfolder + "/outline" + ofToString(i) + ".jpg";
 		temp.loadImage(imgdirectory);
 		OutlineImages.push_back(temp);
-		if (i<TotalStepsNum)
+		if (i < TotalStepsNum)
 		{
 			Toollist.push_back((ToolStyle)toollist[i]);
 		}
 	}
+	imgdirectory = imgfolder + "/" + ofToString(5) + ".jpg";
+	temp.loadImage(imgdirectory);
+	ProcessImages.push_back(temp);
 }
 
 /*********************************** FOR   IPC  PROCESSING  ********************************/
@@ -853,13 +884,14 @@ BYTE clip(int val)
 
 void Widgets::setup()
 {
-	font.load("HYQuHeiW 2.ttf", 12);
+	font.load("HYQuHeiW 2.ttf", 12);	
+	finishpercent.loadImage("interface/finishpercent.png");
+	health.loadImage("interface/health.png");
 }
 
 void Widgets::update(Process cai, bool finish)
 {
-	finishpercent.loadImage("interface/finishpercent.png");
-	health.loadImage("interface/health.png");
+
 	toolpara.loadImage("interface/toolpara" + ofToString(cai.currentStep) + ".png");
 	currentToolStyle = cai.Toollist[cai.currentStep];
 	if (finish) {
@@ -970,7 +1002,7 @@ void ofApp::brushParticleEffects() {
 		dusts[i].update();
 	}
 
-	if (brushDown && timer>80) {
+	if (brushDown && timer > 80) {
 		bool found = false;
 		resetTimer();
 
@@ -998,7 +1030,7 @@ void ofApp::scrapeParticleEffects() {
 		dirts[i].update();
 	}
 
-	if (scrapeDown && timer>80) {
+	if (scrapeDown && timer > 80) {
 		bool found = false;
 		resetTimer();
 
