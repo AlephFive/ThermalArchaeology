@@ -52,7 +52,7 @@ void setup() {
   pinMode(led, OUTPUT);
   pinMode(heatPin1, OUTPUT);
   pinMode(heatPin2, OUTPUT);
-  Serial.begin(38400);
+  Serial.begin(9600);
   unsigned long timeout_millis = 0x14;
   heldValue.set_CS_Timeout_Millis(timeout_millis);
   
@@ -72,7 +72,7 @@ void loop() {
     
     readCap();
     message += (isHeld)? "1":"0";
-    
+    //message += capValue;
     readFlex();
     message += valueStr;
 

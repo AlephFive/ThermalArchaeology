@@ -1,12 +1,5 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of NetworkingUtils.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\NetworkingUtils.cpp, ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\NetworkingUtils.cpp.
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of UdpSocket.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\UdpSocket.cpp, ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\UdpSocket.cpp.
-  ofApp.cpp
-c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
-c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
-  LINK : bin\IRelic_debug.exe not found or not built by the last incremental link; performing full link
-obj\Debug\NetworkingUtils.obj : warning LNK4042: object specified more than once; extras ignored
-obj\Debug\UdpSocket.obj : warning LNK4042: object specified more than once; extras ignored
-     Creating library bin\IRelic_debug.lib and object bin\IRelic_debug.exp
   IRelic.vcxproj -> C:\Program Files\OpenFrameworks\apps\ThermalArchaeology\IRelic\bin\IRelic_debug.exe
   IRelic.vcxproj -> bin\IRelic_debug.pdb (Full PDB)
   
