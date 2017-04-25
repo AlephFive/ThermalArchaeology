@@ -67,7 +67,7 @@ public:
 	ofPoint toucharea;
 	void setposition(int x1, int y1, int w1, int h1) { x = x1; y = y1; w = w1; h = h1; }
 	void setposition(int x1, int y1) { x = x1; y = y1; }
-	void draw() { icon.draw(x, y, w, h); }
+	void draw() {icon.draw(x, y, w, h); }
 };
 
 class Process {
@@ -94,7 +94,7 @@ public:
 	ofTrueTypeFont  font;
 	float thres1;//for knife
 	float thres2;//for brush
-	float workingPercent = 0.0;
+	float workingPercent = 1.0;//working left percent
 	float healthPercent = 1.0;
 	float toolparaPercent = 0.0;
 	const int healthBarWidth = 800;
@@ -152,7 +152,7 @@ class ofApp : public ofBaseApp{
 		ofxCvFloatImage diffFloat;		//Amplified difference images
 		ofxCvFloatImage bufferFloat;	//Buffer image
 		ofxCvGrayscaleImage binaryMotion; //binary mask of motion
-		ofxCvGrayscaleImage IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev);
+		void IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev);
 		bool Moved;
 		void MotionDraw();
 		bool newMotion;
@@ -183,7 +183,9 @@ class ofApp : public ofBaseApp{
 		ofFbo existFbo;
 		ofFbo fbo;
 		void  maskShaderUpdate();
-
+		float times = 6;
+		float shiftx = 160;
+		float shifty = 0;
 
 		/**************************************   Tool Switch   *******************************************/
 		Tool Dropper, Knife, Brush;
@@ -232,8 +234,8 @@ class ofApp : public ofBaseApp{
 			safeThres2 = thres2;
 		}
 		float timeLimit = 60.0; //60 seconds
-		float starttime=0;
-		float timer=0;
+		float dropperstarttime=0;
+		float droppertimer=0;
 		float changingtimeLimit = 2000;//2seconds 2000millisecs
 		float changingstarttime=0;
 		float changingtimer=0;
