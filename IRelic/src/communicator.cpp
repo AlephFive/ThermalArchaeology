@@ -136,9 +136,9 @@ void communicator::update() {
 			serial.flush(true, false);
 			discard = false;
 		}
-		else {
+		
 			sentCounter = 0;
-		}
+		
 
 		
 

@@ -21,7 +21,7 @@ public:
 
 	void toolFilter(char t);
 
-	void resetTimer();
+
 
 
 	char bytesRead[3];				// data from serial, we will be trying to read 3
@@ -49,10 +49,7 @@ public:
 	int knifeOffCounter;
 	int pipOffCounter;
 
-	float brushTimer;
-	float knifeTimer;
-	float pipTimer;
-	float startTime;
+	int sentCounter;
 
 
 
