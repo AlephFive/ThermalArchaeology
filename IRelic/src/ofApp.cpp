@@ -228,7 +228,7 @@ void ofApp::update() {
 		case PROCESS: {
 			if (!stepend) {
 
-				printf("first time process update\n");
+				//printf("first time process update\n");
 				if (firsttimehere) { //update the step data
 					workingLeft = workingTotal[caitao.currentStep];
 					caitaoWidgets.update(caitao, stepend);
@@ -350,7 +350,7 @@ void ofApp::draw() {
 	}
 	case PROCESS: {
 		// FIRST draw the background image
-		printf("first time process draw\n");
+		//printf("first time process draw\n");
 		foregroundImage.draw(0, 0);
 		// THEN draw the masked fbo on top
 		fbo.draw(0, 0);

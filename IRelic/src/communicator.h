@@ -21,6 +21,8 @@ public:
 
 	void toolFilter(char t);
 
+	void resetTimer();
+
 
 	char bytesRead[3];				// data from serial, we will be trying to read 3
 	char bytesReadString[4];			// a string needs a null terminator, so we need 3 + 1 bytes
@@ -46,6 +48,11 @@ public:
 	int brushOffCounter;
 	int knifeOffCounter;
 	int pipOffCounter;
+
+	float brushTimer;
+	float knifeTimer;
+	float pipTimer;
+	float startTime;
 
 
 

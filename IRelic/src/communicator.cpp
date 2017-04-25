@@ -29,9 +29,10 @@ void communicator::reset() {
 
 //------------------------------------------------------------------
 void communicator::update() {
-
+	
 
 	if (serial.available() >= 6) {
+		
 		unsigned char bytesReturned[6];
 
 		memset(bytesReadString, 0, 7);
@@ -41,11 +42,11 @@ void communicator::update() {
 		nRead = serial.readBytes(bytesReturned, 6);
 		memcpy(bytesReadString, bytesReturned, 6);
 
-		/*
+		
 		printf("echo");
 		printf(bytesReadString);
 		printf("\n");
-		*/
+		
 
 		//identify what tool is being used and parse values as needed
 
@@ -68,7 +69,7 @@ void communicator::update() {
 			printf("last 4 bytes are not numeric \n");
 			printf(bytesReadString);
 			printf("\n");
-			serial.flush(true, false);
+			//serial.flush(true, false);
 			discard = true;
 		}
 		
@@ -130,35 +131,26 @@ void communicator::update() {
 
 			}
 		}
-		else if (!discard && !held) {
-			switch (tool) {
-			case 'b':
-				brush = false;
-
-				break;
-			case 'k':
-				knife = false;
-
-				break;
-			case 'p':
-				pip = false;
-
-				break;
-
-			default:
-				//bytes are offset, flush the serial read buffer
-				discard = true;
-
-			}
-		}
 
 		if (discard) {
 			serial.flush(true, false);
+			discard = false;
+		}
+		else {
+			sentCounter = 0;
 		}
 
-		discard = false;
+		
 
 	}
+
+	if (sentCounter > 30) {
+		brush = false;
+		knife = false;
+		pip = false;
+	}
+
+	sentCounter++;
 
 }
 
@@ -218,6 +210,7 @@ void communicator::toolFilter(char t) {
 	}
 	
 }
+
 
 
 //------------------------------------------------------------------

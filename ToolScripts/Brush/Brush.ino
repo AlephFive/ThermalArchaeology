@@ -80,8 +80,9 @@ void loop() {
 
     if(isHeld){
         Serial.print(message);
-        numNotHeld = 0;
+        //numNotHeld = 0;
     }
+    /*
     else{
       if(numNotHeld <= 5 && numNotHeld > 2){
         Serial.print(message);
@@ -91,7 +92,7 @@ void loop() {
       }
       
     }
-    
+    */
     
     
     message = toolChar;
