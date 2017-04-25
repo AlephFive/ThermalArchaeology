@@ -94,7 +94,7 @@ public:
 	ofTrueTypeFont  font;
 	float thres1;//for knife
 	float thres2;//for brush
-	float workingPercent = 0.0;
+	float workingPercent = 1.0;//working left percent
 	float healthPercent = 1.0;
 	float toolparaPercent = 0.0;
 	const int healthBarWidth = 800;
@@ -152,7 +152,7 @@ class ofApp : public ofBaseApp{
 		ofxCvFloatImage diffFloat;		//Amplified difference images
 		ofxCvFloatImage bufferFloat;	//Buffer image
 		ofxCvGrayscaleImage binaryMotion; //binary mask of motion
-		ofxCvGrayscaleImage IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev);
+		void IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev);
 		bool Moved;
 		void MotionDraw();
 		bool newMotion;

@@ -96,41 +96,13 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\..\..\addons\ofxGui\src;
-..\..\..\addons\ofxNetwork\src;
-..\..\..\addons\ofxOpenCv\src;
-..\..\..\addons\ofxOpenCv\libs\opencv\include;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;
-..\..\..\addons\ofxOsc\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
-..\..\..\addons\ofxXmlSettings\src;
-..\..\..\addons\ofxXmlSettings\libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxGui\src;..\..\..\addons\ofxNetwork\src;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxXmlSettings\libs;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\posix;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\win32;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -173,7 +145,13 @@ C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\op
 C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\opencv_videostab249d.lib%3b
 C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\zlibd.lib%3b
 C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\opencv_calib3d249d.lib%3b
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\zlibd.lib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\zlibd.lib;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\posix;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\win32;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -212,67 +190,13 @@ C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug\zl
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\..\..\addons\ofxGui\src;
-..\..\..\addons\ofxNetwork\src;
-..\..\..\addons\ofxOpenCv\src;
-..\..\..\addons\ofxOpenCv\libs\opencv\include;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;
-..\..\..\addons\ofxOsc\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
-C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;
-C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\src;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\core;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\video;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;
-C:\Program Files\OpenFrameworks\addons\ofxNetwork\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxGui\src;..\..\..\addons\ofxNetwork\src;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\src;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\core;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\video;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;C:\Program Files\OpenFrameworks\addons\ofxNetwork\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\posix;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\win32;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -316,67 +240,13 @@ C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Releas
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..\..\..\addons\ofxGui\src;
-..\..\..\addons\ofxNetwork\src;
-..\..\..\addons\ofxOpenCv\src;
-..\..\..\addons\ofxOpenCv\libs\opencv\include;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;
-..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;
-..\..\..\addons\ofxOsc\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;
-..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;
-..\..\..\addons\ofxOsc\libs\oscpack\src\osc;
-C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;
-C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\src;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\core;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\video;
-C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;
-C:\Program Files\OpenFrameworks\addons\ofxNetwork\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxGui\src;..\..\..\addons\ofxNetwork\src;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;..\..\..\addons\ofxOsc\src;..\..\..\addons\ofxOsc\libs\oscpack\src;..\..\..\addons\ofxOsc\libs\oscpack\src\ip;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix;..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32;..\..\..\addons\ofxOsc\libs\oscpack\src\osc;C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\src;C:\Program Files\OpenFrameworks\addons\ofxXmlSettings\libs;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\src;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\contrib;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\core;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\gpu\device\detail;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\legacy;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\nonfree;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\superres;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\video;C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\include\opencv2\videostab;C:\Program Files\OpenFrameworks\addons\ofxNetwork\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\posix;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\ip\win32;
+E:\ALL_Projects\openFrameworks\addons\ofxOsc\libs\oscpack\src\osc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
     </ClCompile>
     <Link>
@@ -433,6 +303,20 @@ C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Releas
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp" />
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\NetworkingUtils.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\UdpSocket.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\NetworkingUtils.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\UdpSocket.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscParameterSync.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxOsc\src\ofxOscSender.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
@@ -628,6 +512,26 @@ C:\Program Files\OpenFrameworks\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Releas
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.h" />
     <ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxOpenCv.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\NetworkingUtils.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\PacketListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\TimerListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\ip\UdpSocket.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\MessageMappingOscPacketListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscException.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscHostEndianness.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPacketListener.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscReceivedElements.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscTypes.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOsc.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscArg.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscBundle.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscMessage.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscParameterSync.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscReceiver.h" />
+    <ClInclude Include="..\..\..\addons\ofxOsc\src\ofxOscSender.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="src\communicator.h" />

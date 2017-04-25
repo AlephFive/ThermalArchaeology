@@ -33,7 +33,7 @@ int caitao_toollist[5] = { 1,2,3,1,3 };
 
 ofxCvGrayscaleImage IRimage;
 ofxCvGrayscaleImage IRimagePrev;
-ofxCvGrayscaleImage IRimagePrevQueue[5];
+//ofxCvGrayscaleImage IRimagePrevQueue[5];
 unsigned char* pixels = new unsigned char[FrameSize];
 unsigned char* pixelBuffer = new unsigned char[FrameSize]; //use for blending of the motion detect area
 														   //ofPixels pixelBuffer;
@@ -127,6 +127,11 @@ void ofApp::setup() {
 	shiftx = 160;
 	shifty = 0;
 	times = 6;
+	IRimagePrev.allocate(160, 120);
+	IRimage.allocate(160, 120);
+	diff.allocate(160, 120);
+	//diffFloat.allocate(160, 120);
+	//binaryMotion.allocate(160, 120);
 	/******************          image loading           *****************/
 	startbackground.loadImage("interface/startbackground.png");//should be startbackground.png
 	endbackground.loadImage("interface/endbackground.png");
@@ -153,7 +158,7 @@ void ofApp::setup() {
 	maskFbo.end();
 
 	fbo.begin();
-	ofClear(0, 0, 0, 255);
+	ofClear(0, 0, 0, 0);
 	fbo.end();
 
 	//Init(160, 120, 2);//for ipc frame  w,h,depth
@@ -165,9 +170,10 @@ void ofApp::setup() {
 	newIR = false;
 
 	//deferfps = 0;
-	ofEnableAlphaBlending();
+	//ofEnableAlphaBlending();
 
-
+	//gamelogic setup
+	stage = START;
 	
 
 	//============Brian==================
@@ -200,7 +206,7 @@ void ofApp::update() {
 	//if (binaryMotion.bAllocated) {
 	//	maskShaderUpdate();
 	//}
-	if (binaryMotion.bAllocated) {
+	
 		switch (stage) {
 		case START: {
 			//getSwitchStage();
@@ -212,11 +218,12 @@ void ofApp::update() {
 				healthLeft = healthTotal;
 				workingLeft = workingTotal[0];
 			}
+			break;
 		}
 		case PROCESS: {
 			if (!stepend) {
 
-
+				printf("first time process update\n");
 				if (firsttimehere) { //update the step data
 					workingLeft = workingTotal[caitao.currentStep];
 					caitaoWidgets.update(caitao, stepend);
@@ -256,9 +263,10 @@ void ofApp::update() {
 					screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
 					stage = GAMEOVER;
 				}
-				if (caitaoWidgets.workingPercent > 0.9) {
+				if (caitaoWidgets.workingPercent < 0.1) {
 					stepend = true;
 					firsttimeend = true;
+					printf("%f\n", caitaoWidgets.workingPercent);
 				}
 
 
@@ -270,6 +278,7 @@ void ofApp::update() {
 					caitaoWidgets.update(caitao, stepend);
 					changingstarttime = ofGetElapsedTimeMillis();
 					firsttimeend = false;
+					printf("tukuaiend!\n");
 				}
 				changingtimer = ofGetElapsedTimeMillis();
 				if (changingtimer - changingstarttime > changingtimeLimit) {
@@ -283,19 +292,24 @@ void ofApp::update() {
 
 
 			}
+			break;
 		}
 		case END: {
 			if (getButtonState(ButtonRestartend)) {
 				stage = START;
 			}
+			break;
 		}
 		case GAMEOVER: {
 			if (getButtonState(ButtonRestartgameover)) {
 				stage = START;
 			}
+			break;
 		}
+		default:
+			printf("something wrong ...stage!=any of the game stages\n"); break;
 		}
-	}
+	
 
 
 
@@ -327,26 +341,32 @@ void ofApp::draw() {
 	case START: {
 		startbackground.draw(0, 0, 1280, 800);
 		ButtonStart.draw();
+		break;
 	}
 	case PROCESS: {
 		// FIRST draw the background image
+		printf("first time process draw\n");
 		foregroundImage.draw(0, 0);
 		// THEN draw the masked fbo on top
 		fbo.draw(0, 0);
 		caitaoWidgets.draw();
 		ToolSwitchDraw();
 		ButtonRestartpro.draw();
+		break;
 	}
 	case END: {
 		endbackground.draw(0, 0, 1280, 800);
 		ButtonRestartend.draw();
-
+		break;
 	}
 	case GAMEOVER: {
 		screenshot.draw(0, 0);
 		gameoverbackground.draw(0, 0, ofGetWidth(), ofGetHeight());//to see if there is any differences
 		ButtonRestartgameover.draw();
+		break;
 	}
+	default:
+		printf("something wrong ...stage!=any of the game stages\n"); break;
 	}
 
 	
@@ -480,9 +500,9 @@ bool ofApp::getButtonState(button bu) {
 		ofPixels temp = binaryMotion.getPixels();
 
 		//unsigned char value;
-		int pixNo = (int)(bu.toucharea.x + bu.toucharea.y * 160);
+		int pixNo = roundf(bu.toucharea.x + bu.toucharea.y * 160);
 		if (pixNo > FrameSize - 1) { printf("Array Bounds Write! Error!\n"); return false; }//
-		if (temp[pixNo] > 0) { return true; }
+		if (temp[pixNo] > 240) { return true; }
 		else { return false; }
 	}
 	else
@@ -516,31 +536,36 @@ void ofApp::ToolSwitchUpdate()
 
 void ofApp::ToolSwitchDraw()
 {
+	ofSetColor(255, 255, 255);
 	switch (ToolNow) {
 	case none: {
 		Knife.icon_off.draw(TSPosition);
 		Brush.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
 		Dropper.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
 	}
 	case knife: {
 		Knife.icon_on.draw(TSPosition);
 		Brush.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
 		Dropper.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
 	}
 	case brush: {
 		Knife.icon_off.draw(TSPosition);
 		Brush.icon_on.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
 		Dropper.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
 	}
 	case dropper: {
 		Knife.icon_off.draw(TSPosition);
 		Brush.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
 		Dropper.icon_on.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
 	}
 	}
 }
 
-ofxCvGrayscaleImage ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev)
+void ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev)
 {
 	if (newIR) {
 		//Store the previous frame, if it exists till now
@@ -586,7 +611,7 @@ ofxCvGrayscaleImage ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImag
 			newMotion = true;
 		}
 	}
-	return binaryMotion;
+	//return binaryMotion;
 }
 
 void ofApp::maskShaderUpdate()
@@ -895,13 +920,14 @@ void Widgets::update(Process cai, bool finish)
 	toolpara.loadImage("interface/toolpara" + ofToString(cai.currentStep) + ".png");
 	currentToolStyle = cai.Toollist[cai.currentStep];
 	if (finish) {
-		instruction.loadImage("interface/step" + ofToString(cai.currentStep) + ".png");
-		tips.loadImage("interface/tips" + ofToString(cai.currentStep) + ".png");
+		instruction.loadImage("interface/stepend" + ofToString(cai.currentStep) + ".png");
+		tips.loadImage("interface/tipsend" + ofToString(cai.currentStep) + ".png");
 
 	}
 	else {
-		instruction.loadImage("interface/stepend" + ofToString(cai.currentStep) + ".png");
-		tips.loadImage("interface/tipsend" + ofToString(cai.currentStep) + ".png");
+	
+		instruction.loadImage("interface/step" + ofToString(cai.currentStep) + ".png");
+		tips.loadImage("interface/tips" + ofToString(cai.currentStep) + ".png");
 	}
 }
 
@@ -914,14 +940,14 @@ void Widgets::draw()
 	toolpara.draw(700, 80);
 	//drawing the health bar
 	ofSetColor(255 * (1 - healthPercent), 255 * healthPercent, 30);
-	ofRect(310, 30, healthBarWidth*healthPercent, 30);
+	ofRect(330, 30, healthBarWidth*healthPercent, 30);
 	ofSetColor(255, 255, 255);
-	font.drawString((int)(healthPercent * 100) + "%", 310 + healthBarWidth + 5, 30);
+	font.drawString((int)(healthPercent * 100) + "%", 330 + healthBarWidth + 5, 30);
 	//draw the working bar
 	ofSetColor(134, 216, 63);
-	ofRect(310, 80, workingBarWidth*workingPercent, 30);
+	ofRect(330, 80, workingBarWidth*workingPercent, 30);
 	ofSetColor(255, 255, 255);
-	font.drawString((int)(workingPercent * 100) + "%", 310 + workingBarWidth + 5, 80);
+	font.drawString((int)(workingPercent * 100) + "%", 330 + workingBarWidth + 5, 80);
 
 	switch (currentToolStyle) {
 	case knife:
@@ -938,7 +964,7 @@ void Widgets::draw()
 			ofSetColor(255, 255, 255);
 			font.drawString("力度安全", 750 + toolparaBarWidth + 5, 80);
 		}
-
+		break;
 	}
 	case brush:
 	{
@@ -953,12 +979,15 @@ void Widgets::draw()
 			ofSetColor(255, 255, 255);
 			font.drawString("力度安全", 750 + toolparaBarWidth + 5, 80);
 		}
+		break;
 	}
 	case dropper:
 	{
 		ofSetColor(134, 216, 63);
 		ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+		break;
 	}
+	
 	}
 }
 
