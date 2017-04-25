@@ -1,9 +1,128 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of NetworkingUtils.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\NetworkingUtils.cpp, ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\NetworkingUtils.cpp.
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(936,5): warning MSB8027: Two or more files with the name of UdpSocket.cpp will produce outputs to the same location. This can lead to an incorrect build result.  The files involved are ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\UdpSocket.cpp, ..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\UdpSocket.cpp.
-obj\Debug\NetworkingUtils.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
-obj\Debug\UdpSocket.obj : warning LNK4042: 对象被多次指定；已忽略多余的指定
-    正在创建库 bin\IRelic_debug.lib 和对象 bin\IRelic_debug.exp
-  IRelic.vcxproj -> E:\ALL_Projects\openFrameworks\apps\ThermalArchaeology\IRelic\bin\IRelic_debug.exe
-  IRelic.vcxproj -> bin\IRelic_debug.pdb (Full PDB)
-  
-  	                   9	E:\ALL_Projects\openFrameworks\export\vs\Win32\
+  ofxBaseGui.cpp
+  ofxButton.cpp
+  ofxGuiGroup.cpp
+  ofxLabel.cpp
+  ofxPanel.cpp
+  ofxSlider.cpp
+  ofxSliderGroup.cpp
+  ofxToggle.cpp
+C:\Program Files\OpenFrameworks\libs\openFrameworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxToggle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxToggle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxPanel.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxPanel.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxLabel.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxLabel.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxSlider.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxSlider.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxBaseGui.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxBaseGui.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp)
+C:\Program Files\OpenFrameworks\libs\openFrameworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxButton.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxButton.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp)
+  ofxTCPClient.cpp
+  ofxTCPManager.cpp
+  ofxTCPServer.cpp
+  ofxUDPManager.cpp
+  ofxCvColorImage.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxTCPServer.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxTCPServer.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxTCPClient.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxTCPClient.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxTCPManager.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxTCPManager.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxUDPManager.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxNetwork\src\ofxUDPManager.cpp)
+  ofxCvContourFinder.cpp
+  ofxCvFloatImage.cpp
+  ofxCvGrayscaleImage.cpp
+  ofxCvHaarFinder.cpp
+  ofxCvImage.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp)
+  ofxCvShortImage.cpp
+  IpEndpointName.cpp
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp(54): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp(56): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp(69): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp(71): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp(79): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\IpEndpointName.cpp(81): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\stdio.h(1769): note: see declaration of 'sprintf'
+  NetworkingUtils.cpp
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\NetworkingUtils.cpp(39): fatal error C1083: Cannot open include file: 'netdb.h': No such file or directory
+  UdpSocket.cpp
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\posix\UdpSocket.cpp(39): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory
+  NetworkingUtils.cpp
+..\..\..\addons\ofxOsc\libs\oscpack\src\ip\win32\NetworkingUtils.cpp(88): warning C4996: 'gethostbyname': Use getaddrinfo() or GetAddrInfoW() instead or define _WINSOCK_DEPRECATED_NO_WARNINGS to disable deprecated API warnings
+  C:\Program Files (x86)\Windows Kits\8.1\Include\um\winsock2.h(2238): note: see declaration of 'gethostbyname'
+  UdpSocket.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvGrayscaleImage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvGrayscaleImage.cpp)
+  OscOutboundPacketStream.cpp
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.cpp(363): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.cpp(605): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscOutboundPacketStream.cpp(625): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\string.h(119): note: see declaration of 'strcpy'
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp)
+  OscPrintReceivedElements.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp)
+..\..\..\addons\ofxOsc\libs\oscpack\src\osc\OscPrintReceivedElements.cpp(129): warning C4996: 'ctime': This function or variable may be unsafe. Consider using ctime_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.10240.0\ucrt\time.h(475): note: see declaration of 'ctime'
+  OscReceivedElements.cpp
+  OscTypes.cpp
+  ofxOscBundle.cpp
+  ofxOscMessage.cpp
+  ofxOscParameterSync.cpp
+  ofxOscReceiver.cpp
+  ofxOscSender.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscBundle.cpp)
+  tinyxml.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscMessage.cpp)
+  tinyxmlerror.cpp
+  tinyxmlparser.cpp
+  ofxXmlSettings.cpp
+  communicator.cpp
+  dirtParticle.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscReceiver.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscParameterSync.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscParameterSync.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscSender.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxOsc\src\ofxOscSender.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file ..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\communicator.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\communicator.cpp)
+  dustParticle.cpp
+  main.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\dirtParticle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\dirtParticle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\dustParticle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\dustParticle.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\main.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\main.cpp)
+  ofApp.cpp
+c:\program files\openframeworks\libs\openframeworks\math\ofVec3f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\ofApp.cpp)
+c:\program files\openframeworks\libs\openframeworks\math\ofVec2f.h : warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss (compiling source file src\ofApp.cpp)
