@@ -89,7 +89,7 @@ void ofApp::setup() {
 
 	caitao.setup(5, "caitao", caitao_toollist);
 
-	setForce(20, 10, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
+	setForce(10, 5, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
 
 	//knife sensor max force:365
 	//knife safe threshold: 345

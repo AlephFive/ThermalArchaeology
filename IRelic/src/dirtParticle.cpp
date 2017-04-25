@@ -26,8 +26,11 @@ void dirtParticle::reset() {
 
 	frc = ofPoint(0, 5, 0);
 	origin = ofPoint(0, 0, 0);
-	mousePos.x = ofGetMouseX();
-	mousePos.y = ofGetMouseY();
+	
+	//mousePos.x = ofGetMouseX();
+	//mousePos.y = ofGetMouseY();
+	mousePos.x = 0;
+	mousePos.y = 0;
 
 	scale = ofRandom(5, 10);
 
@@ -96,6 +99,16 @@ void dirtParticle::update() {
 			isVisible = false;
 		}
 	}
+}
+
+void dirtParticle::emit(int x, int y) {
+	reset();
+
+	lifeStart = ofGetElapsedTimeMillis();
+	lifeEnd = lifeStart + 7000;
+	origin = ofPoint(x, y);
+	timer = 0;
+	isVisible = true;
 }
 
 void dirtParticle::emit() {

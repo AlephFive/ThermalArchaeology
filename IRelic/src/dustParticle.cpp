@@ -16,8 +16,11 @@ void dustParticle::reset() {
 	
 	uniqueVal = ofRandom(-10000, 10000);
 
-	pos.x = ofGetMouseX();
-	pos.y = ofGetMouseY();
+	pos.x = 0;
+	pos.y = 0;
+
+	//pos.x = ofGetMouseX();
+	//pos.y = ofGetMouseY();
 
 	vel.x = ofRandom(-0.01, 0.01);
 	vel.y = ofRandom(-0.01, 0.01);
@@ -91,6 +94,16 @@ void dustParticle::update() {
 			vel.y *= -1.0;
 		}
 	}
+}
+
+void dustParticle::emit(int x, int y) {
+	reset();
+
+	lifeStart = ofGetElapsedTimeMillis();
+	lifeEnd = lifeStart + (int)ofRandom(1000, 5000);
+	origin = ofPoint(x, y);
+	timer = 0;
+	isVisible = true;
 }
 
 void dustParticle::emit() {
