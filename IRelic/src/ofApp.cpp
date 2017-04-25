@@ -1,9 +1,10 @@
 #include "ofApp.h"
 
+
 //#define POLLING
 #define MAXLEN 1024
 #define SAFE_DELETE(x) { if (x) delete x; x = NULL; }				
-
+#define DEFER_FPS 5
 // Global Vars:
 HINSTANCE hInst;
 HWND ghWnd = NULL;
@@ -22,16 +23,42 @@ bool Painted = false;
 short FrameWidth = 160, FrameHeight = 120, FrameDepth = 2;
 int FrameSize = 19200;
 
-
-//void *FrameBuffer = NULL;
+int deferfps = 0;
 
 // function prototypes:
 
+//caitao information
+int caitao_toollist[5] = { 1,2,3,1,3 };
 
 
-
-ofImage IRimage;
+ofxCvGrayscaleImage IRimage;
+ofxCvGrayscaleImage IRimagePrev;
+//ofxCvGrayscaleImage IRimagePrevQueue[5];
 unsigned char* pixels = new unsigned char[FrameSize];
+unsigned char* pixelBuffer = new unsigned char[FrameSize]; //use for blending of the motion detect area
+														   //ofPixels pixelBuffer;
+bool newIR;
+ofxCvColorImage outloadImage;
+
+
+
+
+
+
+//====================Brian==============
+vector <dustParticle> dusts;
+vector <dirtParticle> dirts;
+
+int dustIndex;
+int dirtIndex;
+
+communicator com;
+
+float startTime;
+float timer;
+
+bool brushDown;
+bool scrapeDown;
 
 
 
@@ -50,57 +77,352 @@ std::string TCHAR2STRING(TCHAR *STR)
 	return str;
 
 }
+
+
+
+
 //--------------------------------------------------------------
 void ofApp::setup() {
-	/*For Arduino Serial Communication*/
-	serial.setup(0, 9600);
+	ofSetVerticalSync(true);
 
+	/*********************game data setup**********************/
+
+	caitao.setup(5, "caitao", caitao_toollist);
+
+	setForce(10, 5, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
+
+	//knife sensor max force:365
+	//knife safe threshold: 345
+	//brush sensor max force: 
+	//brush safe threshold:
+
+	/****************widgets setup******************/
+	// should be after the data setup
+	caitaoWidgets.setup();
+	caitaoWidgets.setThres(safeThres1 / forceTotal1, safeThres2 / forceTotal2);
+	ToolSwitchSetup();
+
+
+	/***********************     Button Setup    ****************************/
+	ButtonSetup();
+
+	/**********************For Motion Experiment gui**********************/
+	Experiment.setup("Parameters", "settings.xml");
+	Experiment.add(Amplify.setup("Amplify", 5.0, 1.0, 10.0));
+	Experiment.add(Damping.setup("Damping", 0.85, 0.0, 1.0));
+	Experiment.add(Threshold.setup("Threshold", 128, 0, 255));
+	Experiment.add(Adap.setup("Adaptive", false));
+	Experiment.add(AdaptiveThreshold.setup("AdaptiveThreshold", 30, 0, 255));
+	Experiment.add(outlineth.setup("outlineThreshold", 128, 0, 255));
+	Experiment.add(IRthreshold.setup("IRthreshold", 90, 0, 255));
+
+	//************   For Mask Shader   ***********/
+#ifdef TARGET_OPENGLES
+	shaderMask.load("shadersES2/shader");
+#else
+	if (ofIsGLProgrammableRenderer()) {
+		shaderMask.load("shadersGL3/shaderMask");
+		shaderMotion.load("shadersGL3/shaderMotion");
+	}
+	else {
+		shaderMask.load("shadersGL2/shaderMask");
+		shaderMotion.load("shadersGL2/shaderMotion");
+	}
+#endif
+	shiftx = 160;
+	shifty = 0;
+	times = 6;
+	IRimagePrev.allocate(160, 120);
+	IRimage.allocate(160, 120);
+	diff.allocate(160, 120);
+	//diffFloat.allocate(160, 120);
+	//binaryMotion.allocate(160, 120);
+	/******************          image loading           *****************/
+	startbackground.loadImage("interface/startbackground.png");//should be startbackground.png
+	endbackground.loadImage("interface/endbackground.png");
+	gameoverbackground.loadImage("interface/gameoverbackground.png");
+
+	backgroundImage.loadImage("caitao/1.jpg");
+	foregroundImage.loadImage("caitao/0.jpg");
+
+	//pixelBuffer.allocate(FrameWidth, FrameHeight, OF_IMAGE_GRAYSCALE);
+	for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }
+	int width = ofGetWidth();
+	int height = ofGetHeight();
+	existFbo.allocate(IRimage_w, IRimage_h);
+	maskFbo.allocate(width, height);
+	fbo.allocate(width, height);
+
+	// Clear the FBO's
+	// otherwise it will bring some junk with it from the memory
+	existFbo.begin();
+	ofClear(0, 0, 0, 255);
+	existFbo.end();
+	maskFbo.begin();
+	ofClear(0, 0, 0, 255);
+	maskFbo.end();
+
+	fbo.begin();
+	ofClear(0, 0, 0, 0);
+	fbo.end();
 
 	//Init(160, 120, 2);//for ipc frame  w,h,depth
+
 	/*For IPC Connection*/
 	//SetImagerIPCCount(1);
 	InitIPC();   //这个里面有 init和run
 	SetIPCMode(0, 1);
+	newIR = false;
+
+	//deferfps = 0;
+	//ofEnableAlphaBlending();
+
+	//gamelogic setup
+	stage = START;
+	
+
+	//============Brian==================
+	//setup particles
+	int numDust = 100;
+	int numDirt = 250;
+
+	dusts.assign(numDust, dustParticle());
+	dirts.assign(numDirt, dirtParticle());
+	dustIndex = 0;
+	dirtIndex = 0;
+
+	brushDown = false;
+	scrapeDown = false;
+
+	resetParticles();
+	resetTimer();
+
+	//setup comms
+	com.setup(9600, "COM10");
+	com.reset();
+	
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
+	IRtoMotion(IRimage, IRimagePrev);
+	//if (binaryMotion.bAllocated) {
+	//	maskShaderUpdate();
+	//}
+	
+		switch (stage) {
+		case START: {
+			//getSwitchStage();
+			if (getButtonState(ButtonStart)) {
+
+				//----------------------------------------
+				stage = PROCESS;
+				caitao.currentStep = 0;
+				healthLeft = healthTotal;
+				workingLeft = workingTotal[0];
+
+				existFbo.begin();
+				ofClear(0, 0, 0, 255);
+				existFbo.end();
+				maskFbo.begin();
+				ofClear(0, 0, 0, 255);
+				maskFbo.end();
+
+				fbo.begin();
+				ofClear(0, 0, 0, 0);
+				fbo.end();
+
+			}
+			break;
+		}
+		case PROCESS: {
+			if (!stepend) {
+
+				//printf("first time process update\n");
+				if (firsttimehere) { //update the step data
+					workingLeft = workingTotal[caitao.currentStep];
+					caitaoWidgets.update(caitao, stepend);
+					backgroundImage = caitao.ProcessImages[caitao.currentStep + 1];
+					foregroundImage = caitao.ProcessImages[caitao.currentStep];
+
+					for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }//clean the pixel Buffer for recording a new step motion
+					if (caitao.Toollist[caitao.currentStep] == dropper) { dropperstarttime = ofGetElapsedTimef(); }
+					firsttimehere = false;
+				}
+
+
+				if (caitao.Toollist[caitao.currentStep] == dropper) { droppertimer = ofGetElapsedTimef(); }
+
+				ToolSwitchUpdate();//Brian part
+
+
+				if (ToolNow == caitao.Toollist[caitao.currentStep]) { //If user is not using the right tool,then nothing updates.
+					maskShaderUpdate();//workingleft is calculated here.
+				}
+
+				if (caitao.Toollist[caitao.currentStep] == knife) {
+					caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal1, 0.0, 1.0);
+					if (Moved && currentForce > safeThres1) { healthLeft = healthLeft - 1; }//如果力大于thres1 用刀 并且 motion有数
+				}
+				else if (caitao.Toollist[caitao.currentStep] == brush) {
+					caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal2, 0.0, 1.0);
+					if (Moved  && currentForce > safeThres2) { healthLeft = healthLeft - 1; }//如果力大于thres2 用刷 并且 motion有数
+				}
+				else {
+					caitaoWidgets.toolparaPercent = ofMap(timeLimit - droppertimer + dropperstarttime, 0.0, timeLimit, 0.0, 1.0);
+					if (caitaoWidgets.toolparaPercent < 0.001) { healthLeft = healthLeft - 1; }
+				}
+				caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0);
+				caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0);
+				if (healthLeft < 1) {//gameover
+					screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+					stage = GAMEOVER;
+				}
+				if (caitaoWidgets.workingPercent < 0.1) {
+					stepend = true;
+					firsttimeend = true;
+					printf("%f\n", caitaoWidgets.workingPercent);
+				}
+
+
+			}
+			else {
+
+
+				if (firsttimeend) {
+					caitaoWidgets.update(caitao, stepend);
+					changingstarttime = ofGetElapsedTimeMillis();
+					firsttimeend = false;
+					printf("tukuaiend!\n");
+				}
+				changingtimer = ofGetElapsedTimeMillis();
+				if (changingtimer - changingstarttime > changingtimeLimit) {
+					caitao.currentStep++;
+					firsttimehere = true;
+					stepend = false;
+					if (caitao.currentStep > 4) {
+						stage = END;
+					}
+				}
+
+
+			}
+			break;
+		}
+		case END: {
+			if (getButtonState(ButtonRestartend)) {
+				stage = START;
+			}
+			break;
+		}
+		case GAMEOVER: {
+			if (getButtonState(ButtonRestartgameover)) {
+				stage = START;
+			}
+			break;
+		}
+		default:
+			printf("something wrong ...stage!=any of the game stages\n"); break;
+		}
+	
+
+
+
+	//===================Brian=============================
+	timer = ofGetElapsedTimeMillis() - startTime;
+
+	brushParticleEffects();
+	scrapeParticleEffects();
+
+	com.update();
 
 
 
 
 
 
-	/*For Arduino Serial Communication*/
-	//SerialCom();
+
 }
-
-
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+
 	ofBackground(0, 0, 0); //Set up white background
 	ofSetColor(255, 255, 255); //Set color for image drawing
-	IRimage.draw(0, 0, FrameWidth * 5, FrameHeight * 5); //Draw image
-	ofDrawBitmapString(TCHAR2STRING(labelFrameCounter), 200, 200);
-	//printf("drawing\n");
-}
 
+	
 
-
-
-void ofApp::SerialCom() {
-	while (true) {
-		int c = serial.readByte();
-		if (c == OF_SERIAL_NO_DATA || c == OF_SERIAL_ERROR || c == 0)
-			break;
-		if (c == '\n') {
-			tool.ID = (ToolStyle)stoi(str);
-			str = "";
-		}
-		else str.push_back(c);
+	switch (stage) {
+	case START: {
+		startbackground.draw(0, 0, 1280, 800);
+		ButtonStart.draw();
+		break;
 	}
+	case PROCESS: {
+		// FIRST draw the background image
+		//printf("first time process draw\n");
+		foregroundImage.draw(0, 0);
+		// THEN draw the masked fbo on top
+		fbo.draw(0, 0);
+		caitaoWidgets.draw();
+		ToolSwitchDraw();
+		ButtonRestartpro.draw();
+		break;
+	}
+	case END: {
+		endbackground.draw(0, 0, 1280, 800);
+		ButtonRestartend.draw();
+		break;
+	}
+	case GAMEOVER: {
+		screenshot.draw(0, 0);
+		gameoverbackground.draw(0, 0, ofGetWidth(), ofGetHeight());//to see if there is any differences
+		ButtonRestartgameover.draw();
+		break;
+	}
+	default:
+		printf("something wrong ...stage!=any of the game stages\n"); break;
+	}
+
+	
+
+	//----------------------------------------------------------
+	//Here is For Test 
+
+	//// FIRST draw the background image
+	//foregroundImage.draw(0, 0);
+	//// THEN draw the masked fbo on top
+	//fbo.draw(0, 0);
+
+	MotionDraw();
+	existFbo.draw(0, 4 * IRimage_h);
+	Experiment.draw();
+
+	//IRimage.draw(1600-320, 900-240,FrameWidth*2,FrameHeight*2); //Draw image
+	//ofDrawBitmapString(TCHAR2STRING(labelFrameCounter), 100, 800);
+	//printf("drawing\n");
+
+	//ofBackgroundGradient(ofColor(60, 60, 60), ofColor(10, 10, 10));
+
+
+
+
+
+	//=================Brian======================
+	//drawParticles();
+
+
+
+	//ofSetColor(190);
+
 }
+
+void ofApp::exit() {
+	Experiment.saveToFile("settings.xml");
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 
@@ -123,11 +445,15 @@ void ofApp::mouseDragged(int x, int y, int button) {
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
+	//brushDown = true;
+	scrapeDown = true;
 
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
+	//brushDown = false;
+	scrapeDown = false;
 
 }
 
@@ -156,6 +482,293 @@ void ofApp::dragEvent(ofDragInfo dragInfo) {
 
 }
 
+
+
+
+void ofApp::ButtonSetup()
+{
+
+	ButtonStart.icon.loadImage("interface/start.png");
+	ButtonStart.setposition(ofGetWindowWidth() / 2 - ButtonStart.icon.getWidth() / 2, ofGetWindowHeight() - 80 - ButtonStart.icon.getHeight(), ButtonStart.icon.getWidth(), ButtonStart.icon.getHeight());
+	ButtonStart.name = "Start";
+	ButtonStart.toucharea.set((ButtonStart.x + ButtonStart.w / 2 - shiftx) / 6, (ButtonStart.y + ButtonStart.h / 2 - shifty) / 6);
+
+	ButtonRestartpro.icon.loadImage("interface/restart.png");
+	ButtonRestartpro.setposition(shiftx + 30, shifty + 30, ButtonRestartpro.icon.getWidth(), ButtonRestartpro.icon.getHeight());
+	ButtonRestartpro.name = "Restart";
+	ButtonRestartpro.toucharea.set((ButtonRestartpro.x + ButtonRestartpro.w / 2 - shiftx) / 6, (ButtonRestartpro.y + ButtonRestartpro.h / 2 - shifty) / 6);
+	//	ButtonHelp.setposition(ofGetWindowSize().x / 2, ofGetWindowSize().y / 2, 200, 100);
+	//	ButtonHelp.icon.loadImage("interface/help.png");
+	//	ButtonHelp.name = "Help";
+	ButtonRestartend.icon.loadImage("interface/restartgameover.png");
+	ButtonRestartend.setposition(ofGetWindowWidth() / 2 - ButtonRestartend.icon.getWidth() / 2, 528 - ButtonRestartend.icon.getHeight() / 2, ButtonRestartend.icon.getWidth(), ButtonRestartend.icon.getHeight());
+	ButtonRestartend.name = "Restart";
+	ButtonRestartend.toucharea.set((ButtonRestartend.x + ButtonRestartend.w / 2 - shiftx) / 6, (ButtonRestartend.y + ButtonRestartend.h / 2 - shifty) / 6);
+
+
+	ButtonRestartgameover.icon.loadImage("interface/restartgameover.png");
+	ButtonRestartgameover.setposition(ofGetWindowWidth() / 2 - ButtonRestartgameover.icon.getWidth() / 2, 528 - ButtonRestartgameover.icon.getHeight() / 2, ButtonRestartgameover.icon.getWidth(), ButtonRestartgameover.icon.getHeight());
+	ButtonRestartgameover.name = "Restart";
+	ButtonRestartgameover.toucharea.set((ButtonRestartgameover.x + ButtonRestartgameover.w / 2 - shiftx) / 6, (ButtonRestartgameover.y + ButtonRestartgameover.h / 2 - shifty) / 6);
+}
+bool ofApp::getButtonState(button bu) {
+
+	if (binaryMotion.bAllocated) {
+		ofPixels temp = binaryMotion.getPixels();
+
+		//unsigned char value;
+		int pixNo = roundf(bu.toucharea.x + bu.toucharea.y * 160);
+		if (pixNo > FrameSize - 1) { printf("Array Bounds Write! Error!\n"); return false; }//
+		if (temp[pixNo] > 240) { return true; }
+		else { return false; }
+	}
+	else
+	{
+		return false;
+	}
+
+}
+
+void ofApp::ToolSwitchSetup()
+{
+	Knife.icon_off.loadImage("interface/chan_off.png");
+	Knife.icon_on.loadImage("interface/chan_on.png");
+	Knife.ID = knife;
+	Brush.icon_off.loadImage("interface/brush_off.png");
+	Brush.icon_on.loadImage("interface/brush_on.png");
+	Brush.ID = brush;
+	Dropper.icon_off.loadImage("interface/dropper_off.png");
+	Dropper.icon_on.loadImage("interface/dropper_on.png");
+	Dropper.ID = dropper;
+	TSPosition.set(1180, 268);
+
+}
+
+void ofApp::ToolSwitchUpdate()
+{
+	//ToolNow = ??
+	//currentForce=??
+	//For Brian
+	printf("%c", com.whatTool());
+	switch (com.whatTool()) {
+		case 'b':
+			ToolNow = brush;
+			break;
+		case 'k':
+			ToolNow = knife;
+			break;
+		case 'p':
+			ToolNow = dropper;
+			break;
+		case '0':
+			ToolNow = none;
+			break;
+		default:
+			ToolNow = none;
+	}
+
+	//get force
+	if (ToolNow == brush) {
+		// max force = 365
+		// normal force = 345
+
+
+		currentForce = abs(345 - com.getBrushForce());
+	}
+	else if (ToolNow == knife) {
+
+		// max force 364
+		// normal force 365
+		currentForce = abs(365 - com.getKnifeForce());
+	}
+	else {
+		currentForce = 0;
+	}
+
+}
+
+void ofApp::ToolSwitchDraw()
+{
+	ofSetColor(255, 255, 255);
+	switch (ToolNow) {
+	case none: {
+		Knife.icon_off.draw(TSPosition);
+		Brush.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
+		Dropper.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
+	}
+	case knife: {
+		Knife.icon_on.draw(TSPosition);
+		Brush.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
+		Dropper.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
+	}
+	case brush: {
+		Knife.icon_off.draw(TSPosition);
+		Brush.icon_on.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
+		Dropper.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
+	}
+	case dropper: {
+		Knife.icon_off.draw(TSPosition);
+		Brush.icon_off.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight());
+		Dropper.icon_on.draw(TSPosition.x, TSPosition.y + Knife.icon_off.getHeight() * 2);
+		break;
+	}
+	}
+}
+
+void ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev)
+{
+	if (newIR) {
+		//Store the previous frame, if it exists till now
+
+
+		//Do processing if grayImagePrev is inited
+		if (IRimagePrev.bAllocated) {
+			//Get absolute difference
+			diff.absDiff(IRimage, IRimagePrev);
+
+			//We want to amplify the difference to obtain
+			//better visibility of motion
+			//We do it by multiplication. But to do it, we
+			//need to convert diff to float image first
+			diffFloat = diff;	//Convert to float image
+			diffFloat *= Amplify;	//Amplify the pixel values
+
+									//Update the accumulation buffer
+			if (!bufferFloat.bAllocated) {
+				//If the buffer is not initialized, then
+				//just set it equal to diffFloat
+				bufferFloat = diffFloat;
+			}
+			else {
+				//Slow damping the buffer to zero
+				bufferFloat *= 0.85;
+				//Add current difference image to the buffer
+				bufferFloat += diffFloat;
+			}
+			//get binary image
+			binaryMotion = bufferFloat;
+			if (Adap) {
+				binaryMotion.adaptiveThreshold(AdaptiveThreshold);
+			}
+			else {
+				binaryMotion.threshold(Threshold); //we need to experiment
+			}
+			for (int i = 0; i < FrameSize; i++) {
+				if (binaryMotion.getPixels()[i] > 0) { Moved = true; break; }
+				Moved = false;
+			}
+			newIR = false;
+			newMotion = true;
+		}
+	}
+	//return binaryMotion;
+}
+
+void ofApp::maskShaderUpdate()
+{
+	float times = 6; //finally we make the touch area 960*720, 6 times to IRimage 
+					 //here the drawing parameters decide the camera view on the whole screen
+
+					 //------------------------------------------------------------------------
+					 // we need to accumulate the motion areas .here we store all the motions into existFbo
+//	ofxCvGrayscaleImage abc;
+	/*
+	abc = IRimage;
+	abc.threshold(IRthreshold);
+
+	*/
+	//	abc = binaryMotion;
+	ofPixels ab;
+	//ab.allocate(160, 120,OF_IMAGE_GRAYSCALE);
+	ab = binaryMotion.getPixels();
+
+	//unsigned char value;
+	int counter = 0;
+	for (int i = 0; i < FrameSize; i++) {
+		if (pixelBuffer[i] < ab[i]) {
+			//printf("ab[i]  %d\n",ab[i]);
+			pixelBuffer[i] = ab[i];
+			if (caitao.OutlineImages[caitao.currentStep].getPixels()[i] > 0)
+			{
+				workingLeft--;
+			}
+		}
+	}
+
+	ofxCvGrayscaleImage pBimage;
+	pBimage.allocate(160, 120);
+	pBimage.setFromPixels(pixelBuffer, FrameWidth, FrameHeight);
+	ofSetColor(255);
+	existFbo.begin();
+	pBimage.draw(0, 0);
+	existFbo.end();
+	//----------------------------------------------------------
+	//then draw 160-120 size existFbo expand it "times" times and put it on the middletop of maskFbo
+	maskFbo.begin();
+	//ofClear(0, 0, 0, 0);
+	existFbo.draw(160, 0, IRimage_w * times, IRimage_h * times);
+	maskFbo.end();
+	//----------------------------------------------------------
+	// HERE the shader-masking happends
+	fbo.begin();
+	// Cleaning everthing with alpha mask on 0 in order to make it transparent by default
+	ofClear(0, 0, 0, 0);
+
+	shaderMask.begin();
+	// here is where the fbo is passed to the shader
+	shaderMask.setUniformTexture("maskTex", maskFbo.getTextureReference(), 1);
+
+	backgroundImage.draw(0, 0);
+
+	shaderMask.end();
+	fbo.end();
+	//ofEnableAlphaBlending();
+
+}
+void ofApp::MotionDraw()
+{
+	if (diffFloat.bAllocated) {
+		//Get image dimensions
+		int w = IRimage.width;
+		int h = IRimage.height;
+
+		//Set color for images drawing
+		ofSetColor(255, 255, 255);
+
+		//Draw images grayImage,  diffFloat, bufferFloat
+		IRimage.draw(0, 0, w, h);
+		diffFloat.draw(0, h, w, h);
+		bufferFloat.draw(0, 2 * h, w, h);
+		binaryMotion.draw(0, 3 * h, w, h);
+	}
+}
+
+void Process::setup(int stepsnum, string imgfolder, int *toollist) {
+	TotalImgsNum = stepsnum + 1;
+	TotalStepsNum = stepsnum;
+	currentStep = 0;
+	string imgdirectory;
+	ofImage temp;
+	for (int i = 0; i < TotalStepsNum; i++)
+	{
+		imgdirectory = imgfolder + "/" + ofToString(i) + ".jpg";
+		temp.loadImage(imgdirectory);
+		ProcessImages.push_back(temp);
+		imgdirectory = imgfolder + "/outline" + ofToString(i) + ".jpg";
+		temp.loadImage(imgdirectory);
+		OutlineImages.push_back(temp);
+		if (i < TotalStepsNum)
+		{
+			Toollist.push_back((ToolStyle)toollist[i]);
+		}
+	}
+	imgdirectory = imgfolder + "/" + ofToString(5) + ".jpg";
+	temp.loadImage(imgdirectory);
+	ProcessImages.push_back(temp);
+}
 
 /*********************************** FOR   IPC  PROCESSING  ********************************/
 void InitIPC(void)
@@ -282,7 +895,6 @@ HRESULT WINAPI OnNewFrame(void * pBuffer, FrameMetadata *pMetadata)//pBuffer is 
 	case fsFlagClosing: _tcscat_s(labelFlag, MAXLEN, TEXT("closing")); break;
 	}
 	//	printf("b\n");
-	//ofApp::IRimage = ;
 
 
 
@@ -294,22 +906,11 @@ HRESULT WINAPI OnNewFrame(void * pBuffer, FrameMetadata *pMetadata)//pBuffer is 
 		pixels[i] = (unsigned char)clip((int)buf[i] - 1200);
 	}
 
-	IRimage.setFromPixels(pixels, FrameWidth, FrameHeight, OF_IMAGE_GRAYSCALE);
+	IRimagePrev = IRimage;
 
-
-
-	//short mn, mx;
-	//GetBitmap_Limits(buf, FrameWidth*FrameHeight, &mn, &mx, true);
-	//double Fact = 255.0 / (mx - mn);
-
-	//for (int dst = 0, src = 0, y = 0; y < FrameHeight; y++, dst += stride_diff)
-	//	for (int x = 0; x < FrameWidth; x++, src++, dst += 4)
-	//		ptr[dst] =
-	//		ptr[dst + 1] =
-	//		ptr[dst + 2] = (char)min(max((int)(Fact * (buf[src] - mn)), 0), 255);
-
-
-
+	//	IRimage.setFromPixels(pixels, FrameWidth, FrameHeight, OF_IMAGE_GRAYSCALE); // ofImage IRimage
+	IRimage.setFromPixels(pixels, FrameWidth, FrameHeight);                                             // ofxCvGrayscaleImage IRimage
+	newIR = true;
 	return 0;
 
 
@@ -358,4 +959,178 @@ BYTE clip(int val)
 {
 	return (val <= 255) ? ((val > 0) ? val : 0) : 255;
 };
+
+void Widgets::setup()
+{
+	font.load("HYQuHeiW 2.ttf", 12);	
+	finishpercent.loadImage("interface/finishpercent.png");
+	health.loadImage("interface/health.png");
+}
+
+void Widgets::update(Process cai, bool finish)
+{
+
+	toolpara.loadImage("interface/toolpara" + ofToString(cai.currentStep) + ".png");
+	currentToolStyle = cai.Toollist[cai.currentStep];
+	if (finish) {
+		instruction.loadImage("interface/stepend" + ofToString(cai.currentStep) + ".png");
+		tips.loadImage("interface/tipsend" + ofToString(cai.currentStep) + ".png");
+
+	}
+	else {
+	
+		instruction.loadImage("interface/step" + ofToString(cai.currentStep) + ".png");
+		tips.loadImage("interface/tips" + ofToString(cai.currentStep) + ".png");
+	}
+}
+
+void Widgets::draw()
+{
+	instruction.draw(50, 720);
+	tips.draw(900, 720);
+	finishpercent.draw(260, 80);
+	health.draw(260, 30);
+	toolpara.draw(700, 80);
+	//drawing the health bar
+	ofSetColor(255 * (1 - healthPercent), 255 * healthPercent, 30);
+	ofRect(330, 30, healthBarWidth*healthPercent, 30);
+	ofSetColor(255, 255, 255);
+	font.drawString((int)(healthPercent * 100) + "%", 330 + healthBarWidth + 5, 30);
+	//draw the working bar
+	ofSetColor(134, 216, 63);
+	ofRect(330, 80, workingBarWidth*workingPercent, 30);
+	ofSetColor(255, 255, 255);
+	font.drawString((int)(workingPercent * 100) + "%", 330 + workingBarWidth + 5, 80);
+
+	switch (currentToolStyle) {
+	case knife:
+	{
+		//ofSetColor(255, 255, 255);
+		if (toolparaPercent > thres1) {
+			ofSetColor(255, 0, 0);
+			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+			font.drawString("用力过猛", 750 + toolparaBarWidth + 5, 80);
+		}
+		else {
+			ofSetColor(134, 216, 63);
+			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+			ofSetColor(255, 255, 255);
+			font.drawString("力度安全", 750 + toolparaBarWidth + 5, 80);
+		}
+		break;
+	}
+	case brush:
+	{
+		if (toolparaPercent > thres2) {
+			ofSetColor(255, 0, 0);
+			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+			font.drawString("用力过猛", 750 + toolparaBarWidth + 5, 80);
+		}
+		else {
+			ofSetColor(134, 216, 63);
+			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+			ofSetColor(255, 255, 255);
+			font.drawString("力度安全", 750 + toolparaBarWidth + 5, 80);
+		}
+		break;
+	}
+	case dropper:
+	{
+		ofSetColor(134, 216, 63);
+		ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+		break;
+	}
+	
+	}
+}
+
+
+
+
+//=====================Brian==========================
+
+// A class to describe a group of Particles
+// An ArrayList is used to manage the list of Particles 
+void ofApp::resetParticles() {
+	//reset dust
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].reset();
+	}
+
+	//reset dirt
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].reset();
+	}
+}
+
+void ofApp::drawParticles() {
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].draw();
+	}
+
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].draw();
+	}
+}
+
+void ofApp::resetTimer() {
+	startTime = ofGetElapsedTimeMillis();
+	timer = ofGetElapsedTimeMillis() - startTime;
+}
+
+void ofApp::brushParticleEffects() {
+	//brush effects
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].update();
+	}
+
+	if (brushDown && timer > 80) {
+		bool found = false;
+		resetTimer();
+
+		for (unsigned int i = 0; i < dusts.size(); i++) {
+			if (!dusts[i].isAlive()) {
+				//find index where there is unutilized particle objects
+				dustIndex = i;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			dusts[0].reset();
+			dustIndex = 0;
+		}
+
+		dusts[dustIndex].emit();
+	}
+}
+
+void ofApp::scrapeParticleEffects() {
+	//dirt effects
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].update();
+	}
+
+	if (scrapeDown && timer > 80) {
+		bool found = false;
+		resetTimer();
+
+		for (unsigned int i = 0; i < dirts.size(); i++) {
+			if (!dirts[i].isAlive()) {
+				//find index where there is unutilized particle objects
+				dirtIndex = i;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) {
+			dirts[0].reset();
+			dirtIndex = 0;
+		}
+
+		dirts[dirtIndex].emit();
+	}
+}
 
