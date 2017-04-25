@@ -82,7 +82,7 @@ void communicator::update() {
 					toolChangeCount = 0;
 				}
 
-				if (toolChangeCount > 4) {
+				if (toolChangeCount > 2) {
 					brush = true;
 					knife = false;
 					pip = false;
@@ -99,7 +99,7 @@ void communicator::update() {
 					toolChangeCount = 0;
 				}
 
-				if (toolChangeCount > 4) {
+				if (toolChangeCount > 2) {
 					knife = true;
 					brush = false;
 					pip = false;
@@ -116,7 +116,7 @@ void communicator::update() {
 					toolChangeCount = 0;
 				}
 
-				if (toolChangeCount > 4) {
+				if (toolChangeCount > 2) {
 					pip = true;
 					brush = false;
 					knife = false;

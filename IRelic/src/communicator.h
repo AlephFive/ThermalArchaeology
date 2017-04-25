@@ -42,6 +42,11 @@ public:
 	bool discard;
 	bool held;
 
+	//counters for turning tools off
+	int brushOffCounter;
+	int knifeOffCounter;
+	int pipOffCounter;
+
 
 
 };
