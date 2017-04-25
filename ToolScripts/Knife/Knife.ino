@@ -80,7 +80,7 @@ void loop() {
 
     if(isHeld){
         Serial.print(message);
-        numNotHeld = 0;
+        //numNotHeld = 0;
     }
     /*
     else{

@@ -198,7 +198,7 @@ void ofApp::setup() {
 	resetTimer();
 
 	//setup comms
-	com.setup(38400, "COM10");
+	com.setup(9600, "COM10");
 	com.reset();
 	
 
@@ -222,6 +222,18 @@ void ofApp::update() {
 				caitao.currentStep = 0;
 				healthLeft = healthTotal;
 				workingLeft = workingTotal[0];
+
+				existFbo.begin();
+				ofClear(0, 0, 0, 255);
+				existFbo.end();
+				maskFbo.begin();
+				ofClear(0, 0, 0, 255);
+				maskFbo.end();
+
+				fbo.begin();
+				ofClear(0, 0, 0, 0);
+				fbo.end();
+
 			}
 			break;
 		}
@@ -537,6 +549,7 @@ void ofApp::ToolSwitchUpdate()
 	//ToolNow = ??
 	//currentForce=??
 	//For Brian
+	printf("%c", com.whatTool());
 	switch (com.whatTool()) {
 		case 'b':
 			ToolNow = brush;

@@ -19,6 +19,8 @@ public:
 
 	char whatTool();
 
+	void resetTimer();
+
 	void toolFilter(char t);
 
 
@@ -45,12 +47,16 @@ public:
 	bool held;
 
 	//counters for turning tools off
-	int brushOffCounter;
-	int knifeOffCounter;
-	int pipOffCounter;
+	int brushCounter;
+	int knifeCounter;
+	int pipCounter;
 
 	int sentCounter;
 
+	char prev;
+	//char prevprev;
 
+	float startTime;
+	float timer;
 
 };

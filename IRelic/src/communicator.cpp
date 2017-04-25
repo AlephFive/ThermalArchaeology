@@ -21,15 +21,21 @@ void communicator::reset() {
 	brush = false;
 	knife = false;
 	pip = false;
+	prev = '0';
+	//prevprev = '0';
 
 	toolChangeCount = 0;
 	discard = false;
 	held = false;
+
+	brushCounter = 0;
+	knifeCounter = 0;
+	pipCounter = 0;
 }
 
 //------------------------------------------------------------------
 void communicator::update() {
-	
+	timer = ofGetElapsedTimeMillis() - startTime;
 
 	if (serial.available() >= 6) {
 		
@@ -73,55 +79,59 @@ void communicator::update() {
 			discard = true;
 		}
 		
-		if (!discard && held) {
+		if (!discard) {
 			switch (tool) {
 			case 'b':
-				if (!brush) {
-					toolChangeCount++;
-				}
-				else {
-					toolChangeCount = 0;
-				}
-
-				if (toolChangeCount > 2) {
+				if (prev == 'b' && brushCounter > 4) {
 					brush = true;
 					knife = false;
 					pip = false;
+					
+				}
+				if (brushCounter < 100) {
+					brushCounter++;
 				}
 				
+				knifeCounter = 0;
+				pipCounter = 0;
+				resetTimer();
+				prev = 'b';
 				brushForce = value;
 
 				break;
 			case 'k':
-				if (!knife) {
-					toolChangeCount++;
-				}
-				else {
-					toolChangeCount = 0;
-				}
-
-				if (toolChangeCount > 2) {
-					knife = true;
+				if (prev == 'k' && knifeCounter > 4) {
 					brush = false;
+					knife = true;
 					pip = false;
+					
+				}
+				if (knifeCounter < 100) {
+					knifeCounter++;
 				}
 
+				brushCounter = 0;
+				pipCounter = 0;
+				resetTimer();
 				knifeForce = value;
+				prev = 'k';
 				
 				break;
 			case 'p':
-				if (!pip) {
-					toolChangeCount++;
-				}
-				else {
-					toolChangeCount = 0;
-				}
-
-				if (toolChangeCount > 2) {
+				if (prev == 'p' && pipCounter > 4) {
 					pip = true;
 					brush = false;
 					knife = false;
+					
 				}
+				if (pipCounter < 100) {
+					pipCounter++;
+				}
+
+				brushCounter = 0;
+				knifeCounter = 0;
+				resetTimer();
+				prev = 'p';
 
 				break;
 
@@ -130,6 +140,8 @@ void communicator::update() {
 				discard = true;
 
 			}
+
+			
 		}
 
 		if (discard) {
@@ -144,12 +156,14 @@ void communicator::update() {
 
 	}
 
-	if (sentCounter > 30) {
+	//tool timeout
+	if (timer > 1000) {
 		brush = false;
 		knife = false;
 		pip = false;
+		printf("no tools held \n");
 	}
-
+	
 	sentCounter++;
 
 }
@@ -177,38 +191,26 @@ int communicator::getKnifeForce(){
 }
 
 char communicator::whatTool() {
-	if (brush) {
+	if (brush == 1) {
 		return 'b';
 	}
-	else if (knife) {
+	else if (knife == 1) {
 		return 'k';
 	}
-	else if (pip) {
+	else if (pip == 1) {
 		return 'p';
 	}
 	else {
+		//printf("whattool else\n");
 		return '0';
 	}
 }
 
-void communicator::toolFilter(char t) {
-	if (toolChangeCount > 4) {
-		switch (t) {
-			case 'b':
-				brush = held;
-				
-				break;
-			case 'k':
-				knife = held;
 
-				break;
-			case 'p':
-				pip = held;
 
-				break;
-		}
-	}
-	
+void communicator::resetTimer() {
+	startTime = ofGetElapsedTimeMillis();
+	timer = ofGetElapsedTimeMillis() - startTime;
 }
 
 
