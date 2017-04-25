@@ -17,6 +17,10 @@ public:
 	int getBrushForce();
 	int getKnifeForce();
 
+	char whatTool();
+
+	void toolFilter(char t);
+
 
 	char bytesRead[3];				// data from serial, we will be trying to read 3
 	char bytesReadString[4];			// a string needs a null terminator, so we need 3 + 1 bytes
@@ -32,6 +36,12 @@ public:
 
 	int brushForce;
 	int knifeForce;
+
+	int toolChangeCount;
+
+	bool discard;
+	bool held;
+
 
 
 };

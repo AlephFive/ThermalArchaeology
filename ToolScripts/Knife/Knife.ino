@@ -30,6 +30,8 @@ int flexValue;
 
 int recived;
 
+int numNotHeld = 0;
+
 bool lighton;
 bool isHeld;
 CapacitiveSensor heldValue = CapacitiveSensor(capSend,capRcv);
@@ -42,7 +44,7 @@ void setup() {
   isHeld = false;
   recived = 0;
   flexValue = 0;
-
+  numNotHeld = 0;
   capValue = 0;
   message = toolChar;
 
@@ -53,7 +55,7 @@ void setup() {
   pinMode(heatPin1, OUTPUT);
   pinMode(heatPin2, OUTPUT);
   Serial.begin(9600);
-  unsigned long timeout_millis = 0x14;
+  unsigned long timeout_millis = 0x1F4;
   heldValue.set_CS_Timeout_Millis(timeout_millis);
   
 }
@@ -76,7 +78,20 @@ void loop() {
     readFlex();
     message += valueStr;
 
-    Serial.print(message);
+    if(isHeld){
+        Serial.print(message);
+        numNotHeld = 0;
+    }
+    else{
+      if(numNotHeld <= 5 && numNotHeld > 2){
+        Serial.print(message);
+      }
+      if(numNotHeld < 9999){
+        numNotHeld++;
+      }
+      
+    }
+    
     message = toolChar;
     valueStr = "";
   }

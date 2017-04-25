@@ -89,7 +89,12 @@ void ofApp::setup() {
 
 	caitao.setup(5, "caitao", caitao_toollist);
 
-	setForce(30, 15, 100, 50);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
+	setForce(20, 10, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
+
+	//knife sensor max force:365
+	//knife safe threshold: 345
+	//brush sensor max force: 
+	//brush safe threshold:
 
 	/****************widgets setup******************/
 	// should be after the data setup
@@ -532,6 +537,41 @@ void ofApp::ToolSwitchUpdate()
 	//ToolNow = ??
 	//currentForce=??
 	//For Brian
+	switch (com.whatTool()) {
+		case 'b':
+			ToolNow = brush;
+			break;
+		case 'k':
+			ToolNow = knife;
+			break;
+		case 'p':
+			ToolNow = dropper;
+			break;
+		case '0':
+			ToolNow = none;
+			break;
+		default:
+			ToolNow = none;
+	}
+
+	//get force
+	if (ToolNow == brush) {
+		// max force = 365
+		// normal force = 345
+
+
+		currentForce = abs(345 - com.getBrushForce());
+	}
+	else if (ToolNow == knife) {
+
+		// max force 364
+		// normal force 365
+		currentForce = abs(365 - com.getKnifeForce());
+	}
+	else {
+		currentForce = 0;
+	}
+
 }
 
 void ofApp::ToolSwitchDraw()
