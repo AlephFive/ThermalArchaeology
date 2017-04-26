@@ -1166,7 +1166,7 @@ void ofApp::emitParticles() {
 				dirts[0].reset();
 				dirtIndex = 0;
 			}
-			dirts[dirtIndex].emit();
+			dirts[dirtIndex].emit(GetMotionCenter(binaryMotion));
 			break;
 
 		case brush:
@@ -1186,7 +1186,7 @@ void ofApp::emitParticles() {
 				dustIndex = 0;
 			}
 
-			dusts[dustIndex].emit();
+			dusts[dustIndex].emit(GetMotionCenter(binaryMotion));
 			break;
 		case none:
 			bool found = false;
@@ -1204,7 +1204,7 @@ void ofApp::emitParticles() {
 				dirts[0].reset();
 				dirtIndex = 0;
 			}
-			dirts[dirtIndex].emit();
+			dirts[dirtIndex].emit(GetMotionCenter(binaryMotion));
 			break;
 		default:
 			//do nothing
@@ -1231,6 +1231,7 @@ void ofApp::particleEffects() {
 ofPoint ofApp::GetMotionCenter(ofxCvGrayscaleImage motion)
 {
 	contourFinder.findContours(motion, 5, (160 * 120) / 4, 4, false, true);
+	
 	float tempmax = 0;
 	int tempi = 0;
 	for (int i = 0; i < contourFinder.nBlobs; i++) {
