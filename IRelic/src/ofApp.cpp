@@ -335,8 +335,8 @@ void ofApp::update() {
 	//===================Brian=============================
 	timer = ofGetElapsedTimeMillis() - startTime;
 
-	brushParticleEffects();
-	scrapeParticleEffects();
+	particleEffects();
+	// set emitParticles to true when dirt is being removed to allow particles to generate
 
 	com.update();
 
@@ -1081,6 +1081,7 @@ void ofApp::resetTimer() {
 	timer = ofGetElapsedTimeMillis() - startTime;
 }
 
+/*
 void ofApp::brushParticleEffects() {
 	//brush effects
 	for (unsigned int i = 0; i < dusts.size(); i++) {
@@ -1117,7 +1118,7 @@ void ofApp::scrapeParticleEffects() {
 
 	
 	
-	/*
+	
 
 	if (ToolNow == knife && timer > 80 && emitParticles) {
 		bool found = false;
@@ -1139,10 +1140,10 @@ void ofApp::scrapeParticleEffects() {
 
 		dirts[dirtIndex].emit();
 	}
-	*/
+	
 
 }
-
+*/
 void ofApp::emitParticles() {
 	if (timer > 80) {
 		
