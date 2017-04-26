@@ -8,7 +8,7 @@ public:
 
 	void reset();
 	void update();
-	void emit(int x, int y);
+	void emit(ofPoint xy);
 	void emit();
 	void draw();
 	bool isAlive();

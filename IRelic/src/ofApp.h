@@ -124,6 +124,7 @@ class ofApp : public ofBaseApp{
 		//void scrapeParticleEffects();
 		void particleEffects();
 		void emitParticles();
+		ofPoint GetMotionCenter(ofxCvGrayscaleImage motion);
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -140,7 +141,7 @@ class ofApp : public ofBaseApp{
 
 
 		//Kilo start from here
-
+		ofxCvContourFinder contourFinder;
 		/*For Arduino Serial Communication*/
 		
 		//string str;

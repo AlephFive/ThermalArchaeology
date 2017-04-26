@@ -96,12 +96,12 @@ void dustParticle::update() {
 	}
 }
 
-void dustParticle::emit(int x, int y) {
+void dustParticle::emit(ofPoint xy) {
 	reset();
 
 	lifeStart = ofGetElapsedTimeMillis();
 	lifeEnd = lifeStart + (int)ofRandom(1000, 5000);
-	origin = ofPoint(x, y);
+	origin = xy;
 	timer = 0;
 	isVisible = true;
 }

@@ -60,7 +60,7 @@ float timer;
 bool brushDown;
 bool scrapeDown;
 
-bool emitParticles;
+bool emitP;
 
 
 
@@ -335,6 +335,7 @@ void ofApp::update() {
 	//===================Brian=============================
 	timer = ofGetElapsedTimeMillis() - startTime;
 
+	emitP = Moved;
 	particleEffects();
 	// set emitParticles to true when dirt is being removed to allow particles to generate
 
@@ -1187,7 +1188,24 @@ void ofApp::emitParticles() {
 
 			dusts[dustIndex].emit();
 			break;
+		case none:
+			bool found = false;
+			resetTimer();
+			for (unsigned int i = 0; i < dirts.size(); i++) {
+				if (!dirts[i].isAlive()) {
+					//find index where there is unutilized particle objects
+					dirtIndex = i;
+					found = true;
+					break;
+				}
+			}
 
+			if (!found) {
+				dirts[0].reset();
+				dirtIndex = 0;
+			}
+			dirts[dirtIndex].emit();
+			break;
 		default:
 			//do nothing
 		}
@@ -1205,8 +1223,21 @@ void ofApp::particleEffects() {
 		dirts[i].update();
 	}
 
-	if (emitParticles) {
+	if (emitP) {
 		emitParticles();
 	}
 }
 
+ofPoint ofApp::GetMotionCenter(ofxCvGrayscaleImage motion)
+{
+	contourFinder.findContours(motion, 5, (160 * 120) / 4, 4, false, true);
+	float tempmax = 0;
+	int tempi = 0;
+	for (int i = 0; i < contourFinder.nBlobs; i++) {
+		if (tempmax < contourFinder.blobs.at(i).area) {
+			tempmax = contourFinder.blobs.at(i).area;
+			tempi = i;
+		}
+	}
+	return contourFinder.blobs.at(tempi).centroid;
+}
