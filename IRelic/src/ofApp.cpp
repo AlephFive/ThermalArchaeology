@@ -60,6 +60,8 @@ float timer;
 bool brushDown;
 bool scrapeDown;
 
+bool emitParticles;
+
 
 
 std::string TCHAR2STRING(TCHAR *STR)
@@ -89,9 +91,9 @@ void ofApp::setup() {
 
 	caitao.setup(5, "caitao", caitao_toollist);
 
-	setForce(10, 5, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
+	setForce(11, 6, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
 
-	//knife sensor max force:365
+	//knife sensor max force:200
 	//knife safe threshold: 345
 	//brush sensor max force: 
 	//brush safe threshold:
@@ -369,6 +371,11 @@ void ofApp::draw() {
 		caitaoWidgets.draw();
 		ToolSwitchDraw();
 		ButtonRestartpro.draw();
+
+		//LASTLY draw the particle effects
+		drawParticles();
+
+
 		break;
 	}
 	case END: {
@@ -413,10 +420,6 @@ void ofApp::draw() {
 	//=================Brian======================
 	//drawParticles();
 
-
-
-	//ofSetColor(190);
-
 }
 
 void ofApp::exit() {
@@ -446,14 +449,14 @@ void ofApp::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button) {
 	//brushDown = true;
-	scrapeDown = true;
+	//scrapeDown = true;
 
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {
 	//brushDown = false;
-	scrapeDown = false;
+	//scrapeDown = false;
 
 }
 
@@ -577,9 +580,9 @@ void ofApp::ToolSwitchUpdate()
 	}
 	else if (ToolNow == knife) {
 
-		// max force 364
-		// normal force 365
-		currentForce = abs(365 - com.getKnifeForce());
+		// max force 200
+		// normal force 189
+		currentForce = abs(189 - com.getKnifeForce());
 	}
 	else {
 		currentForce = 0;
@@ -1084,7 +1087,7 @@ void ofApp::brushParticleEffects() {
 		dusts[i].update();
 	}
 
-	if (brushDown && timer > 80) {
+	if (ToolNow == knife && timer > 80 && emitParticles) {
 		bool found = false;
 		resetTimer();
 
@@ -1112,7 +1115,11 @@ void ofApp::scrapeParticleEffects() {
 		dirts[i].update();
 	}
 
-	if (scrapeDown && timer > 80) {
+	
+	
+	/*
+
+	if (ToolNow == knife && timer > 80 && emitParticles) {
 		bool found = false;
 		resetTimer();
 
@@ -1131,6 +1138,74 @@ void ofApp::scrapeParticleEffects() {
 		}
 
 		dirts[dirtIndex].emit();
+	}
+	*/
+
+}
+
+void ofApp::emitParticles() {
+	if (timer > 80) {
+		
+
+		switch (ToolNow) {
+		case knife: 
+			bool found = false;
+			resetTimer();
+			for (unsigned int i = 0; i < dirts.size(); i++) {
+				if (!dirts[i].isAlive()) {
+					//find index where there is unutilized particle objects
+					dirtIndex = i;
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				dirts[0].reset();
+				dirtIndex = 0;
+			}
+			dirts[dirtIndex].emit();
+			break;
+
+		case brush:
+			bool found = false;
+			resetTimer();
+			for (unsigned int i = 0; i < dusts.size(); i++) {
+				if (!dusts[i].isAlive()) {
+					//find index where there is unutilized particle objects
+					dustIndex = i;
+					found = true;
+					break;
+				}
+			}
+
+			if (!found) {
+				dusts[0].reset();
+				dustIndex = 0;
+			}
+
+			dusts[dustIndex].emit();
+			break;
+
+		default:
+			//do nothing
+		}
+
+	}
+
+}
+
+void ofApp::particleEffects() {
+	for (unsigned int i = 0; i < dusts.size(); i++) {
+		dusts[i].update();
+	}
+
+	for (unsigned int i = 0; i < dirts.size(); i++) {
+		dirts[i].update();
+	}
+
+	if (emitParticles) {
+		emitParticles();
 	}
 }
 

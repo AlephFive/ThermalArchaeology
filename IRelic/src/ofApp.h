@@ -120,8 +120,10 @@ class ofApp : public ofBaseApp{
 
 		void resetParticles();
 		void drawParticles();
-		void brushParticleEffects();
-		void scrapeParticleEffects();
+		//void brushParticleEffects();
+		//void scrapeParticleEffects();
+		void particleEffects();
+		void emitParticles();
 
 		void keyPressed(int key);
 		void keyReleased(int key);
