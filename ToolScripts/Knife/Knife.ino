@@ -17,8 +17,8 @@ int capRcv = 2;
 int capSend = 11;
 int flexPin = A1;
 
-int heatPin1 = 9;
-int heatPin2 = 7;
+int heatPin1 = 10;
+int heatPin2 = 8;
 
 long capValue;
 String message;
