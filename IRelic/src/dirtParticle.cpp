@@ -101,12 +101,12 @@ void dirtParticle::update() {
 	}
 }
 
-void dirtParticle::emit(int x, int y) {
+void dirtParticle::emit(ofPoint xy) {
 	reset();
 
 	lifeStart = ofGetElapsedTimeMillis();
 	lifeEnd = lifeStart + 7000;
-	origin = ofPoint(x, y);
+	origin = xy;
 	timer = 0;
 	isVisible = true;
 }
