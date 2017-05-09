@@ -7,15 +7,16 @@ public:
 	dustParticle();
 	
 	void reset();
-	void update();
-	void emit(ofPoint xy);
-	void emit();
+	void update(ofPoint *mPos);
+	void emit(ofPoint *xy);
+	//void emit();
 	void draw();
 	bool isAlive();
 
 	ofPoint pos;
 	ofPoint vel;
 	ofPoint frc;
+	ofPoint downfrc;
 
 	ofPoint origin;
 
@@ -33,11 +34,18 @@ public:
 	float gravity;
 
 	bool isVisible;
+	
+	bool goodVel;
+	int framesProcessed;
+
+	float expansionRate;
 
 	int alpha;
 	int r;
 	int g;
 	int b;
+
+	ofImage dust;
 
 	
 };

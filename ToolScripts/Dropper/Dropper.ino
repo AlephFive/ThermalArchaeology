@@ -16,6 +16,8 @@ int led = 13;
 int capRcv = 2;
 int capSend = 11;
 
+int capPin = A5;
+
 
 int heatPin1 = 9;
 int heatPin2 = 7;
@@ -74,7 +76,7 @@ void loop() {
     
     readCap();
     message += (isHeld)? "1":"0";
-    
+    //message += capValue;
     message += "0000";
     if(isHeld){
         Serial.print(message);
@@ -133,8 +135,8 @@ bool throttle_ms(uint32_t period_ms, uint32_t cur_time, uint32_t *prev_period) {
 
 
 void readCap(){
-  capValue = heldValue.capacitiveSensor(30);
-    if(capValue < 1000){
+  capValue = analogRead(capPin);
+    if(capValue < 250){
       isHeld = false;
     }
     else{

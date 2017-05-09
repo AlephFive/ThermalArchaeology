@@ -161,7 +161,7 @@ void communicator::update() {
 		brush = false;
 		knife = false;
 		pip = false;
-		printf("no tools held \n");
+		//printf("no tools held \n");
 	}
 	
 	sentCounter++;

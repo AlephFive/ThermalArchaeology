@@ -17,6 +17,8 @@ int capRcv = 2;
 int capSend = 11;
 int flexPin = A1;
 
+int capPin = A5;
+
 int heatPin1 = 9;
 int heatPin2 = 7;
 
@@ -137,9 +139,8 @@ bool throttle_ms(uint32_t period_ms, uint32_t cur_time, uint32_t *prev_period) {
 
 
 void readCap(){
-  capValue = heldValue.capacitiveSensor(30);
-  //Serial.print(String(capValue));
-    if(capValue < 1000){
+  capValue = analogRead(capPin);
+    if(capValue < 250){
       isHeld = false;
     }
     else{

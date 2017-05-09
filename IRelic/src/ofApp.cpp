@@ -14,7 +14,7 @@ TCHAR labelFrameCounter[MAXLEN];
 TCHAR labelPIF[MAXLEN];
 TCHAR labelFlag[MAXLEN];
 TCHAR labelTarget[MAXLEN];
-
+queue<ofxCvGrayscaleImage> IRqueue;
 bool ipcInitialized = false;
 bool frameInitialized = false;
 bool Connected = false;
@@ -61,8 +61,12 @@ bool brushDown;
 bool scrapeDown;
 
 bool emitP;
+bool found;
 
+bool disableForce;
 
+ofPoint mouse;
+ofPoint *mPos;
 
 std::string TCHAR2STRING(TCHAR *STR)
 
@@ -91,10 +95,10 @@ void ofApp::setup() {
 
 	caitao.setup(5, "caitao", caitao_toollist);
 
-	setForce(11, 6, 20, 10);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
+	setForce(10, 6, 20, 17);//Brian!! fill in these 4 parameters. The first one is the maximum force magnitude you may get from the gage sensor on the knife, the second is the safe threshold for the knife and the other two are for the brush.
 
-	//knife sensor max force:200
-	//knife safe threshold: 345
+	//knife sensor max force:208
+	//knife safe threshold: 204
 	//brush sensor max force: 
 	//brush safe threshold:
 
@@ -111,13 +115,13 @@ void ofApp::setup() {
 	/**********************For Motion Experiment gui**********************/
 	Experiment.setup("Parameters", "settings.xml");
 	Experiment.add(Amplify.setup("Amplify", 5.0, 1.0, 10.0));
-	Experiment.add(Damping.setup("Damping", 0.85, 0.0, 1.0));
-	Experiment.add(Threshold.setup("Threshold", 128, 0, 255));
+	Experiment.add(Damping.setup("Damping", 0.7, 0.0, 1.0));
+	Experiment.add(Threshold.setup("Threshold", 15, 0, 255));
 	Experiment.add(Adap.setup("Adaptive", false));
 	Experiment.add(AdaptiveThreshold.setup("AdaptiveThreshold", 30, 0, 255));
-	Experiment.add(outlineth.setup("outlineThreshold", 128, 0, 255));
-	Experiment.add(IRthreshold.setup("IRthreshold", 90, 0, 255));
-
+	//Experiment.add(outlineth.setup("outlineThreshold", 128, 0, 255));
+	//Experiment.add(IRthreshold.setup("IRthreshold", 90, 0, 255));
+//	Experiment.add(IRfanwei.setup("IRfanwei", 25, 0, 50));
 	//************   For Mask Shader   ***********/
 #ifdef TARGET_OPENGLES
 	shaderMask.load("shadersES2/shader");
@@ -146,7 +150,28 @@ void ofApp::setup() {
 
 	backgroundImage.loadImage("caitao/1.jpg");
 	foregroundImage.loadImage("caitao/0.jpg");
+	appfont.load("HYQuHeiW 2.ttf",30);
 
+
+	/******************************      SOUND   ************************************/
+	shali.load("audio/shali.mp3");
+	shali.setVolume(0.7);
+	saotu.load("audio/saotu.mp3");
+	saotu.setVolume(0.65);
+	daojishi.load("audio/daojishi.mp3");
+	kouxue.load("audio/kouxue.mp3");
+	
+
+	baojing.load("audio/baojing.mp3");
+	baojing.setVolume(0.4);
+
+	daojishi.setLoop(true);
+	shali.setMultiPlay(true);
+	saotu.setMultiPlay(true);
+	baojing.setMultiPlay(true);
+	
+	
+	
 	//pixelBuffer.allocate(FrameWidth, FrameHeight, OF_IMAGE_GRAYSCALE);
 	for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }
 	int width = ofGetWidth();
@@ -185,8 +210,8 @@ void ofApp::setup() {
 
 	//============Brian==================
 	//setup particles
-	int numDust = 100;
-	int numDirt = 250;
+	int numDust = 750;
+	int numDirt = 750;
 
 	dusts.assign(numDust, dustParticle());
 	dirts.assign(numDirt, dirtParticle());
@@ -195,12 +220,17 @@ void ofApp::setup() {
 
 	brushDown = false;
 	scrapeDown = false;
+	emitP = false;
 
 	resetParticles();
 	resetTimer();
 
+	mouse = ofPoint(200, 200);
+	mPos = &mouse;
+	
+
 	//setup comms
-	com.setup(9600, "COM10");
+	com.setup(9600, "COM3");
 	com.reset();
 	
 
@@ -213,129 +243,171 @@ void ofApp::update() {
 	//if (binaryMotion.bAllocated) {
 	//	maskShaderUpdate();
 	//}
-	
-		switch (stage) {
-		case START: {
-			//getSwitchStage();
-			if (getButtonState(ButtonStart)) {
 
-				//----------------------------------------
-				stage = PROCESS;
-				caitao.currentStep = 0;
-				healthLeft = healthTotal;
-				workingLeft = workingTotal[0];
+	switch (stage) {
+	case START: {
+		if (daojishi.isPlaying()) { daojishi.stop(); }
+		//getSwitchStage();
+		if (getButtonState(ButtonStart)) {
 
-				existFbo.begin();
-				ofClear(0, 0, 0, 255);
-				existFbo.end();
-				maskFbo.begin();
-				ofClear(0, 0, 0, 255);
-				maskFbo.end();
-
-				fbo.begin();
-				ofClear(0, 0, 0, 0);
-				fbo.end();
-
-			}
-			break;
+			//----------------------------------------
+			stage = PROCESS;
+			resetGameData();
+			gamelogicsound.load("audio/start.mp3");
+			gamelogicsound.setVolume(0.7);
+			gamelogicsound.play();
 		}
-		case PROCESS: {
-			if (!stepend) {
+		break;
+	}
+	case PROCESS: {
+		if (getButtonState(ButtonRestartpro)) {
+			stage = START;
 
-				//printf("first time process update\n");
-				if (firsttimehere) { //update the step data
-					workingLeft = workingTotal[caitao.currentStep];
-					caitaoWidgets.update(caitao, stepend);
-					backgroundImage = caitao.ProcessImages[caitao.currentStep + 1];
-					foregroundImage = caitao.ProcessImages[caitao.currentStep];
+			//THIS PART IS BUGGY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			//getButtonState might be broken
+		}
 
-					for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }//clean the pixel Buffer for recording a new step motion
-					if (caitao.Toollist[caitao.currentStep] == dropper) { dropperstarttime = ofGetElapsedTimef(); }
-					firsttimehere = false;
-				}
+		
+		//baojing logic
+		if (baojing.getPosition() > 0.8) {
+			healthLeft = healthLeft - 5;
+			if (!kouxue.isPlaying()) {
+				kouxue.play();
+			}
+			
+		}
+		
+		
+		
 
+		if (!stepend) {
+			
+			//printf("first time process update\n");
+			if (firsttimehere) { //update the step data
+				workingLeft = workingTotal[caitao.currentStep];
+				caitaoWidgets.update(caitao, stepend);
+				backgroundImage = caitao.ProcessImages[caitao.currentStep + 1];
+				foregroundImage = caitao.ProcessImages[caitao.currentStep];
 
-				if (caitao.Toollist[caitao.currentStep] == dropper) { droppertimer = ofGetElapsedTimef(); }
+				for (int i = 0; i < FrameSize; i++) { pixelBuffer[i] = 0; }//clean the pixel Buffer for recording a new step motion
+				if (caitao.Toollist[caitao.currentStep] == dropper) { dropperstarttime = ofGetElapsedTimef(); }
+				firsttimehere = false;
+			}
+			
 
-				ToolSwitchUpdate();//Brian part
+			if (caitao.Toollist[caitao.currentStep] == dropper) { droppertimer = ofGetElapsedTimef(); }
 
+			ToolSwitchUpdate();//Brian part
 
-				if (ToolNow == caitao.Toollist[caitao.currentStep]) { //If user is not using the right tool,then nothing updates.
-					maskShaderUpdate();//workingleft is calculated here.
-				}
+			ToolNow = caitao.Toollist[caitao.currentStep];
+			if (ToolNow == caitao.Toollist[caitao.currentStep]) { //If user is not using the right tool,then nothing updates.
+				maskShaderUpdate();//workingleft is calculated here.
+				
+			}
 
-				if (caitao.Toollist[caitao.currentStep] == knife) {
-					caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal1, 0.0, 1.0);
-					if (Moved && currentForce > safeThres1) { healthLeft = healthLeft - 1; }//如果力大于thres1 用刀 并且 motion有数
-				}
-				else if (caitao.Toollist[caitao.currentStep] == brush) {
-					caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal2, 0.0, 1.0);
-					if (Moved  && currentForce > safeThres2) { healthLeft = healthLeft - 1; }//如果力大于thres2 用刷 并且 motion有数
-				}
-				else {
-					caitaoWidgets.toolparaPercent = ofMap(timeLimit - droppertimer + dropperstarttime, 0.0, timeLimit, 0.0, 1.0);
-					if (caitaoWidgets.toolparaPercent < 0.001) { healthLeft = healthLeft - 1; }
-				}
-				caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0);
-				caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0);
-				if (healthLeft < 1) {//gameover
-					screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
-					stage = GAMEOVER;
-				}
-				if (caitaoWidgets.workingPercent < 0.1) {
-					stepend = true;
-					firsttimeend = true;
-					printf("%f\n", caitaoWidgets.workingPercent);
-				}
-
-
+			if (caitao.Toollist[caitao.currentStep] == knife) {
+				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal1, 0.0, 1.0, true);
+				if (Moved && currentForce > safeThres1 && !baojing.isPlaying()) {
+					baojing.play();
+					//healthLeft = healthLeft - 5; 
+				}//如果力大于thres1 用刀 并且 motion有数
+			}
+			else if (caitao.Toollist[caitao.currentStep] == brush) {
+				caitaoWidgets.toolparaPercent = ofMap(currentForce, 0.0, forceTotal2, 0.0, 1.0, true);
+				if (Moved  && currentForce > safeThres2 && !baojing.isPlaying()) {
+					baojing.play();
+					//healthLeft = healthLeft - 5;
+				}//如果力大于thres2 用刷 并且 motion有数
 			}
 			else {
+				caitaoWidgets.toolparaPercent = ofMap(timeLimit - droppertimer + dropperstarttime, 0.0, timeLimit, 0.0, 1.0, true);
+				if (!daojishi.isPlaying()) {
+				daojishi.play();
+			}
+				if (caitaoWidgets.toolparaPercent < 0.001) { healthLeft = healthLeft - 5; }
+			}
+			caitaoWidgets.healthPercent = ofMap(healthLeft, 0.0, healthTotal, 0.0, 1.0, true);
+			caitaoWidgets.workingPercent = ofMap((float)workingLeft, 0.0, (float)workingTotal[caitao.currentStep], 0.0, 1.0, true);
+			if (healthLeft < 1) {//gameover
+				if (daojishi.isPlaying()) { daojishi.stop(); }
+				screenshot.grabScreen(0, 0, ofGetWidth(), ofGetHeight());
+				gamelogicsound.load("audio/gg.mp3");
+				gamelogicsound.setVolume(0.7);
+				gamelogicsound.play();
+				stage = GAMEOVER;
+			}
+			if (caitaoWidgets.workingPercent < 0.1) {
+				if (daojishi.isPlaying()) { daojishi.stop(); }
+				stepend = true;
+				firsttimeend = true;
+				//printf("%f\n", caitaoWidgets.workingPercent);
+			}
 
 
-				if (firsttimeend) {
-					caitaoWidgets.update(caitao, stepend);
-					changingstarttime = ofGetElapsedTimeMillis();
-					firsttimeend = false;
-					printf("tukuaiend!\n");
+		}
+		else {
+
+
+			if (firsttimeend) {
+				gamelogicsound.load("audio/stepend.mp3");
+				gamelogicsound.setVolume(0.7);
+				gamelogicsound.play();
+				caitaoWidgets.update(caitao, stepend);
+				changingstarttime = ofGetElapsedTimeMillis();
+				firsttimeend = false;
+				//printf("tukuaiend!\n");
+			}
+			changingtimer = ofGetElapsedTimeMillis();
+			if (changingtimer - changingstarttime > changingtimeLimit) {
+				caitao.currentStep++;
+				firsttimehere = true;
+				stepend = false;
+				if (caitao.currentStep > 4) {
+					gamelogicsound.load("audio/success.mp3");
+					gamelogicsound.setVolume(0.7);
+					gamelogicsound.play();
+					stage = END;
 				}
-				changingtimer = ofGetElapsedTimeMillis();
-				if (changingtimer - changingstarttime > changingtimeLimit) {
-					caitao.currentStep++;
-					firsttimehere = true;
-					stepend = false;
-					if (caitao.currentStep > 4) {
-						stage = END;
-					}
-				}
+			}
 
 
-			}
-			break;
 		}
-		case END: {
-			if (getButtonState(ButtonRestartend)) {
-				stage = START;
-			}
-			break;
+
+		//printf("Moved = %i \n", Moved);
+		emitP = Moved;
+		if (Moved) {
+			ofPoint temp = GetMotionCenter();
+			mouse = GetMotionCenter();
+			//printf("x = %f y = %f", temp.x, temp.y);
 		}
-		case GAMEOVER: {
-			if (getButtonState(ButtonRestartgameover)) {
-				stage = START;
-			}
-			break;
+		
+		break;
+	}
+	case END: {
+		
+		if (getButtonState(ButtonRestartend)) {
+			stage = START;
 		}
-		default:
-			printf("something wrong ...stage!=any of the game stages\n"); break;
+		break;
+	}
+	case GAMEOVER: {
+		
+		if (getButtonState(ButtonRestartgameover)) {
+			stage = START;
 		}
-	
+		break;
+	}
+	default:
+		printf("something wrong ...stage!=any of the game stages\n"); break;
+	}
+
 
 
 
 	//===================Brian=============================
 	timer = ofGetElapsedTimeMillis() - startTime;
-
-	emitP = Moved;
+	
+	
 	particleEffects();
 	// set emitParticles to true when dirt is being removed to allow particles to generate
 
@@ -356,7 +428,7 @@ void ofApp::draw() {
 	ofSetColor(255, 255, 255); //Set color for image drawing
 
 	
-
+	
 	switch (stage) {
 	case START: {
 		startbackground.draw(0, 0, 1280, 800);
@@ -372,16 +444,24 @@ void ofApp::draw() {
 		caitaoWidgets.draw();
 		ToolSwitchDraw();
 		ButtonRestartpro.draw();
-
-		//LASTLY draw the particle effects
-		drawParticles();
-
-
+		if (ToolNow!= caitao.Toollist[caitao.currentStep]&&ToolNow!=none) {
+			string wrongstr = "Wrong Tool!";
+			appfont.drawString(wrongstr, 1280 / 2 - 50, 415);
+		}
+		
 		break;
 	}
 	case END: {
+	
 		endbackground.draw(0, 0, 1280, 800);
 		ButtonRestartend.draw();
+
+		string scorestr;
+		scorestr = ofToString((int)round(caitaoWidgets.healthPercent * 100));
+		scorestr += "%";
+		//appfont.setSpaceSize(100);
+		appfont.drawString(scorestr, 1280 / 2 - 80, 270);
+		
 		break;
 	}
 	case GAMEOVER: {
@@ -393,7 +473,7 @@ void ofApp::draw() {
 	default:
 		printf("something wrong ...stage!=any of the game stages\n"); break;
 	}
-
+	
 	
 
 	//----------------------------------------------------------
@@ -404,9 +484,9 @@ void ofApp::draw() {
 	//// THEN draw the masked fbo on top
 	//fbo.draw(0, 0);
 
-	MotionDraw();
-	existFbo.draw(0, 4 * IRimage_h);
-	Experiment.draw();
+	//MotionDraw();
+	//existFbo.draw(0, 4 * IRimage_h);
+	//Experiment.draw();
 
 	//IRimage.draw(1600-320, 900-240,FrameWidth*2,FrameHeight*2); //Draw image
 	//ofDrawBitmapString(TCHAR2STRING(labelFrameCounter), 100, 800);
@@ -421,6 +501,11 @@ void ofApp::draw() {
 	//=================Brian======================
 	//drawParticles();
 
+
+
+	//ofSetColor(190);
+	//LASTLY draw the particle effects
+	drawParticles();
 }
 
 void ofApp::exit() {
@@ -498,7 +583,7 @@ void ofApp::ButtonSetup()
 	ButtonStart.toucharea.set((ButtonStart.x + ButtonStart.w / 2 - shiftx) / 6, (ButtonStart.y + ButtonStart.h / 2 - shifty) / 6);
 
 	ButtonRestartpro.icon.loadImage("interface/restart.png");
-	ButtonRestartpro.setposition(shiftx + 30, shifty + 30, ButtonRestartpro.icon.getWidth(), ButtonRestartpro.icon.getHeight());
+	ButtonRestartpro.setposition(shiftx+10, shifty+30, ButtonRestartpro.icon.getWidth()+30, ButtonRestartpro.icon.getHeight()+30);
 	ButtonRestartpro.name = "Restart";
 	ButtonRestartpro.toucharea.set((ButtonRestartpro.x + ButtonRestartpro.w / 2 - shiftx) / 6, (ButtonRestartpro.y + ButtonRestartpro.h / 2 - shifty) / 6);
 	//	ButtonHelp.setposition(ofGetWindowSize().x / 2, ofGetWindowSize().y / 2, 200, 100);
@@ -517,20 +602,47 @@ void ofApp::ButtonSetup()
 }
 bool ofApp::getButtonState(button bu) {
 
-	if (binaryMotion.bAllocated) {
-		ofPixels temp = binaryMotion.getPixels();
-
-		//unsigned char value;
-		int pixNo = roundf(bu.toucharea.x + bu.toucharea.y * 160);
-		if (pixNo > FrameSize - 1) { printf("Array Bounds Write! Error!\n"); return false; }//
-		if (temp[pixNo] > 240) { return true; }
-		else { return false; }
+	if (Moved) {
+		ofPoint touch = GetMotionCenter();
+		if (touch.x > bu.x&&touch.x<bu.x + bu.w&&touch.y>bu.y&&touch.y < bu.y + bu.h) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	else
-	{
+	else {
 		return false;
 	}
+	//if (binaryMotion.bAllocated) {
+	//	ofPixels temp = binaryMotion.getPixels();
 
+	//	//unsigned char value;
+	//	int pixNo = roundf(bu.toucharea.x + bu.toucharea.y * 160);
+	//	if (pixNo > FrameSize - 1) { printf("Array Bounds Write! Error!\n"); return false; }//
+	//	if (temp[pixNo] > 240) { return true; }
+	//	else { return false; }
+	//}
+	//else
+	//{
+	//	return false;
+	//}
+
+}
+
+ofPoint ofApp::GetMotionCenter()
+{
+	
+	float tempmax=0;
+	int tempi=0;
+	for (int i = 0; i < contourFinder.nBlobs; i++) {
+		if (tempmax < contourFinder.blobs.at(i).area) {
+			tempmax =  contourFinder.blobs.at(i).area;
+			tempi = i;
+		}
+	}
+	ofPoint a = ofPoint(contourFinder.blobs.at(tempi).centroid.x * 6 + 160, contourFinder.blobs.at(tempi).centroid.y * 6);
+	return a ;
 }
 
 void ofApp::ToolSwitchSetup()
@@ -553,41 +665,53 @@ void ofApp::ToolSwitchUpdate()
 	//ToolNow = ??
 	//currentForce=??
 	//For Brian
-	printf("%c", com.whatTool());
+	//printf("%c", com.whatTool());
+	if (disableForce) {
+		disableForce = false;
+	}
+	
 	switch (com.whatTool()) {
-		case 'b':
-			ToolNow = brush;
-			break;
-		case 'k':
-			ToolNow = knife;
-			break;
-		case 'p':
-			ToolNow = dropper;
-			break;
-		case '0':
-			ToolNow = none;
-			break;
-		default:
-			ToolNow = none;
+	case 'b':
+		ToolNow = brush;
+		break;
+	case 'k':
+		ToolNow = knife;
+		break;
+	case 'p':
+		ToolNow = dropper;
+		break;
+	case '0':
+		ToolNow = none;
+		disableForce = true;
+		break;
+	default:
+		disableForce = true;
+		ToolNow = none;
 	}
 
 	//get force
-	if (ToolNow == brush) {
+	if (disableForce){
+		currentForce = 0;
+	}
+	else if (ToolNow == brush) {
 		// max force = 365
-		// normal force = 345
+		// normal force = 340
 
 
-		currentForce = abs(345 - com.getBrushForce());
+		currentForce = abs(340 - com.getBrushForce());
 	}
 	else if (ToolNow == knife) {
 
-		// max force 200
-		// normal force 189
-		currentForce = abs(189 - com.getKnifeForce());
+		// max force 208
+		// normal force 196
+		currentForce = abs(196 - com.getKnifeForce());
 	}
 	else {
+		
 		currentForce = 0;
 	}
+
+
 
 }
 
@@ -622,8 +746,61 @@ void ofApp::ToolSwitchDraw()
 	}
 }
 
+void ofApp::resetGameData()
+{
+	stepend = false;
+	firsttimehere = true;
+	firsttimeend = false;
+	caitao.currentStep = 0;
+	healthLeft = healthTotal;
+	workingLeft = workingTotal[0];
+
+	existFbo.begin();
+	ofClear(0, 0, 0, 255);
+	existFbo.end();
+	maskFbo.begin();
+	ofClear(0, 0, 0, 255);
+	maskFbo.end();
+
+	fbo.begin();
+	ofClear(0, 0, 0, 0);
+	fbo.end();
+}
+
 void ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev)
 {
+	/*
+	binaryMotion = IRimage;
+	binaryMotion.threshold(Threshold); //we need to experiment
+	for (int i = 0; i < FrameSize; i++) {
+		if (binaryMotion.getPixels()[i] > 128) { Moved = true; break; }
+		Moved = false;
+	}
+	newIR = false;
+	newMotion = true;
+	*/
+	//printf("%d  ---  %d\n", IRimage.getPixels()[17680],IRimagePrev.getPixels()[17680]);
+	if (IRimagePrev.bAllocated) {
+		//for (int i = 0; i < FrameSize; i++) {
+		//	pixels[i] = (unsigned char)clip((int)(IRimage.getPixels()[i] - IRimagePrev.getPixels()[i]));
+		//}
+		binaryMotion.absDiff(IRimage, IRimagePrev);
+		binaryMotion.threshold(Threshold);
+		contourFinder.findContours(binaryMotion, 3, (160 * 120) / 4, 4, false, true);
+		if (contourFinder.nBlobs > 0) {
+			Moved = true;
+		}
+		else {
+			Moved = false;
+		}
+		
+	}
+	else { printf("IRimagePrev does not exist\n"); }
+	//printf("%d\n", binaryMotion.getPixels()[17680]);
+
+
+	
+	/*
 	if (newIR) {
 		//Store the previous frame, if it exists till now
 
@@ -639,7 +816,7 @@ void ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev)
 			//need to convert diff to float image first
 			diffFloat = diff;	//Convert to float image
 			diffFloat *= Amplify;	//Amplify the pixel values
-
+			
 									//Update the accumulation buffer
 			if (!bufferFloat.bAllocated) {
 				//If the buffer is not initialized, then
@@ -648,26 +825,30 @@ void ofApp::IRtoMotion(ofxCvGrayscaleImage IR, ofxCvGrayscaleImage IRprev)
 			}
 			else {
 				//Slow damping the buffer to zero
-				bufferFloat *= 0.85;
+				bufferFloat *= Damping;
 				//Add current difference image to the buffer
 				bufferFloat += diffFloat;
 			}
 			//get binary image
 			binaryMotion = bufferFloat;
+			
+			
 			if (Adap) {
 				binaryMotion.adaptiveThreshold(AdaptiveThreshold);
 			}
 			else {
 				binaryMotion.threshold(Threshold); //we need to experiment
 			}
+
 			for (int i = 0; i < FrameSize; i++) {
-				if (binaryMotion.getPixels()[i] > 0) { Moved = true; break; }
+				if (binaryMotion.getPixels()[i] > 128) { Moved = true; break; }
 				Moved = false;
 			}
 			newIR = false;
 			newMotion = true;
 		}
 	}
+	*/
 	//return binaryMotion;
 }
 
@@ -689,8 +870,11 @@ void ofApp::maskShaderUpdate()
 	//ab.allocate(160, 120,OF_IMAGE_GRAYSCALE);
 	ab = binaryMotion.getPixels();
 
+	
 	//unsigned char value;
 	int counter = 0;
+	//printf("%d\n", caitao.OutlineImages[caitao.currentStep].getPixels()[2]);
+	//printf("%d\n", caitao.OutlineImages[caitao.currentStep].getPixels()[9600]);
 	for (int i = 0; i < FrameSize; i++) {
 		if (pixelBuffer[i] < ab[i]) {
 			//printf("ab[i]  %d\n",ab[i]);
@@ -698,6 +882,7 @@ void ofApp::maskShaderUpdate()
 			if (caitao.OutlineImages[caitao.currentStep].getPixels()[i] > 0)
 			{
 				workingLeft--;
+				
 			}
 		}
 	}
@@ -734,7 +919,8 @@ void ofApp::maskShaderUpdate()
 }
 void ofApp::MotionDraw()
 {
-	if (diffFloat.bAllocated) {
+	//if (diffFloat.bAllocated) {
+	if (IRimage.bAllocated) {
 		//Get image dimensions
 		int w = IRimage.width;
 		int h = IRimage.height;
@@ -744,8 +930,8 @@ void ofApp::MotionDraw()
 
 		//Draw images grayImage,  diffFloat, bufferFloat
 		IRimage.draw(0, 0, w, h);
-		diffFloat.draw(0, h, w, h);
-		bufferFloat.draw(0, 2 * h, w, h);
+		//diffFloat.draw(0, h, w, h);
+		//bufferFloat.draw(0, 2 * h, w, h);
 		binaryMotion.draw(0, 3 * h, w, h);
 	}
 }
@@ -902,18 +1088,55 @@ HRESULT WINAPI OnNewFrame(void * pBuffer, FrameMetadata *pMetadata)//pBuffer is 
 
 
 
-	unsigned char* pixels = new unsigned char[FrameSize];
+	//unsigned char* pixels = new unsigned char[FrameSize];
 
 	short* buf = (short*)pBuffer;
-	for (int i = 0; i < FrameSize; i++) {
-		// temp=(buf[i]-1000)/10    we want tmin~tmax   now tmin=20 tmax=45.5 so tmin mapped to unsigned char 0 tmax map to unsigned char 255
-		pixels[i] = (unsigned char)clip((int)buf[i] - 1200);
-	}
+	short bmax=0, bmin=0;
+	float bavg = 0;
+	float sigma = 0;
+	short buff;
 
-	IRimagePrev = IRimage;
+	for (int i = 0; i < FrameSize; i++) {
+		
+
+		//bavg += (buf[i]-1000);
+		bavg += buf[i];
+		bmax = bmax > buf[i] ? bmax : buf[i];
+		bmin = bmin < buf[i] ? bmin : buf[i];
+	}
+	bavg = bavg / FrameSize;
+	
+	//for (int i = 0; i < FrameSize; i++) {
+	//	sigma += (buf[i] - bavg)*(buf[i] - bavg);
+	//}
+	//sigma = sqrt(sigma / FrameSize);
+	
+	
+	for (int i = 0; i < FrameSize; i++) {
+		//     //***temp=(buf[i]-1000)/10    we want tmin~tmax   now tmin=20 tmax=45.5 so tmin mapped to unsigned char 0 tmax map to unsigned char 255
+		//		pixels[i] = (unsigned char)clip((int)buf[i] - 1200);
+		buff = (short)round(ofMap(buf[i], bavg -30 , bavg + 30, 0, 255, true));
+		pixels[i] = (unsigned char)buff;
+	}
+	//printf("source %d\n", pixels[17680]);
+	//IRimagePrev = IRimage;
 
 	//	IRimage.setFromPixels(pixels, FrameWidth, FrameHeight, OF_IMAGE_GRAYSCALE); // ofImage IRimage
 	IRimage.setFromPixels(pixels, FrameWidth, FrameHeight);                                             // ofxCvGrayscaleImage IRimage
+	
+	if (IRqueue.size() < 10) {
+		IRqueue.push(IRimage);
+		
+	}
+	else
+	{
+		IRqueue.push(IRimage);
+		IRimagePrev = IRqueue.front();
+		IRqueue.pop();
+		//printf("IRqueue size:%d \n", IRqueue.size());
+	}
+	//printf("IRqueue size:%d \n", IRqueue.size());
+
 	newIR = true;
 	return 0;
 
@@ -966,7 +1189,7 @@ BYTE clip(int val)
 
 void Widgets::setup()
 {
-	font.load("HYQuHeiW 2.ttf", 12);	
+	font.load("HYQuHeiW 2.ttf", 20);	
 	finishpercent.loadImage("interface/finishpercent.png");
 	health.loadImage("interface/health.png");
 }
@@ -994,54 +1217,66 @@ void Widgets::draw()
 	tips.draw(900, 720);
 	finishpercent.draw(260, 80);
 	health.draw(260, 30);
-	toolpara.draw(700, 80);
+	toolpara.draw(715, 80);
 	//drawing the health bar
 	ofSetColor(255 * (1 - healthPercent), 255 * healthPercent, 30);
-	ofRect(330, 30, healthBarWidth*healthPercent, 30);
+	ofRect(380, 30, healthBarWidth*healthPercent, 30);
 	ofSetColor(255, 255, 255);
-	font.drawString((int)(healthPercent * 100) + "%", 330 + healthBarWidth + 5, 30);
+	string str;
+	str = ofToString((int)round(healthPercent * 100));
+	str += "%";
+	font.drawString(str, 380 + healthBarWidth + 5, 55);
 	//draw the working bar
 	ofSetColor(134, 216, 63);
-	ofRect(330, 80, workingBarWidth*workingPercent, 30);
+	ofRect(380, 80, workingBarWidth*workingPercent, 30);
 	ofSetColor(255, 255, 255);
-	font.drawString((int)(workingPercent * 100) + "%", 330 + workingBarWidth + 5, 80);
-
+	str = ofToString((int)round(workingPercent * 100));
+	str += "%";
+	font.drawString(str, 380 + workingBarWidth + 5, 105);
+	ofNoFill();
+	ofRect(379, 29, healthBarWidth + 2, 32);
+	ofRect(379, 79, workingBarWidth + 2, 32);
+	ofRect(819, 79, toolparaBarWidth+2, 30+2);
+	ofFill();
 	switch (currentToolStyle) {
 	case knife:
 	{
 		//ofSetColor(255, 255, 255);
+		
 		if (toolparaPercent > thres1) {
 			ofSetColor(255, 0, 0);
-			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
-			font.drawString("用力过猛", 750 + toolparaBarWidth + 5, 80);
+			ofRect(820, 80, toolparaBarWidth*toolparaPercent, 30);
+			font.drawString("X", 820 + toolparaBarWidth + 5, 105);
 		}
 		else {
 			ofSetColor(134, 216, 63);
-			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+			ofRect(820, 80, toolparaBarWidth*toolparaPercent, 30);
 			ofSetColor(255, 255, 255);
-			font.drawString("力度安全", 750 + toolparaBarWidth + 5, 80);
+			font.drawString("O", 820 + toolparaBarWidth + 5, 105);
 		}
+		ofLine(ofPoint(820 + toolparaBarWidth*thres1, 80), ofPoint(820 + toolparaBarWidth*thres1, 80 + 30));
 		break;
 	}
 	case brush:
 	{
 		if (toolparaPercent > thres2) {
 			ofSetColor(255, 0, 0);
-			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
-			font.drawString("用力过猛", 750 + toolparaBarWidth + 5, 80);
+			ofRect(820, 80, toolparaBarWidth*toolparaPercent, 30);
+			font.drawString("X", 820 + toolparaBarWidth + 5, 105);
 		}
 		else {
 			ofSetColor(134, 216, 63);
-			ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+			ofRect(820, 80, toolparaBarWidth*toolparaPercent, 30);
 			ofSetColor(255, 255, 255);
-			font.drawString("力度安全", 750 + toolparaBarWidth + 5, 80);
+			font.drawString("O", 820 + toolparaBarWidth + 5, 105);
 		}
+		ofLine(ofPoint(820 + toolparaBarWidth*thres2, 80), ofPoint(820 + toolparaBarWidth*thres2, 80 + 30));
 		break;
 	}
 	case dropper:
 	{
 		ofSetColor(134, 216, 63);
-		ofRect(750, 80, toolparaBarWidth*toolparaPercent, 30);
+		ofRect(820, 80, toolparaBarWidth*toolparaPercent, 30);
 		break;
 	}
 	
@@ -1084,77 +1319,85 @@ void ofApp::resetTimer() {
 
 /*
 void ofApp::brushParticleEffects() {
-	//brush effects
-	for (unsigned int i = 0; i < dusts.size(); i++) {
-		dusts[i].update();
-	}
+//brush effects
+for (unsigned int i = 0; i < dusts.size(); i++) {
+dusts[i].update();
+}
 
-	if (ToolNow == knife && timer > 80 && emitParticles) {
-		bool found = false;
-		resetTimer();
+if (ToolNow == knife && timer > 80 && emitParticles) {
+bool found = false;
+resetTimer();
 
-		for (unsigned int i = 0; i < dusts.size(); i++) {
-			if (!dusts[i].isAlive()) {
-				//find index where there is unutilized particle objects
-				dustIndex = i;
-				found = true;
-				break;
-			}
-		}
+for (unsigned int i = 0; i < dusts.size(); i++) {
+if (!dusts[i].isAlive()) {
+//find index where there is unutilized particle objects
+dustIndex = i;
+found = true;
+break;
+}
+}
 
-		if (!found) {
-			dusts[0].reset();
-			dustIndex = 0;
-		}
+if (!found) {
+dusts[0].reset();
+dustIndex = 0;
+}
 
-		dusts[dustIndex].emit();
-	}
+dusts[dustIndex].emit();
+}
 }
 
 void ofApp::scrapeParticleEffects() {
-	//dirt effects
-	for (unsigned int i = 0; i < dirts.size(); i++) {
-		dirts[i].update();
-	}
+//dirt effects
+for (unsigned int i = 0; i < dirts.size(); i++) {
+dirts[i].update();
+}
 
-	
-	
-	
 
-	if (ToolNow == knife && timer > 80 && emitParticles) {
-		bool found = false;
-		resetTimer();
 
-		for (unsigned int i = 0; i < dirts.size(); i++) {
-			if (!dirts[i].isAlive()) {
-				//find index where there is unutilized particle objects
-				dirtIndex = i;
-				found = true;
-				break;
-			}
-		}
 
-		if (!found) {
-			dirts[0].reset();
-			dirtIndex = 0;
-		}
 
-		dirts[dirtIndex].emit();
-	}
-	
+if (ToolNow == knife && timer > 80 && emitParticles) {
+bool found = false;
+resetTimer();
+
+for (unsigned int i = 0; i < dirts.size(); i++) {
+if (!dirts[i].isAlive()) {
+//find index where there is unutilized particle objects
+dirtIndex = i;
+found = true;
+break;
+}
+}
+
+if (!found) {
+dirts[0].reset();
+dirtIndex = 0;
+}
+
+dirts[dirtIndex].emit();
+}
+
+if (Moved) {
+if (ToolNow == knife && !shali.isPlaying()) {
+shali.play();
+}
+else if (ToolNow == brush && !shali.isPlaying()) {
+saotu.play();
+}
+}
 
 }
 */
 void ofApp::emitParticles() {
-	if (timer > 80) {
-		
+	if (true) {
+		//printf("emitParticles \n");
 
 		switch (ToolNow) {
-		case knife: 
-			bool found = false;
+		case knife:
+			found = false;
 			resetTimer();
-			for (unsigned int i = 0; i < dirts.size(); i++) {
-				if (!dirts[i].isAlive()) {
+			for (unsigned int i = 0; i < dirts.size() - 2; i++) {
+				if (!dirts[i].isAlive() && !dirts[i + 1].isAlive() && !dirts[i + 2].isAlive()) {
 					//find index where there is unutilized particle objects
 					dirtIndex = i;
 					found = true;
@@ -1166,11 +1409,13 @@ void ofApp::emitParticles() {
 				dirts[0].reset();
 				dirtIndex = 0;
 			}
-			dirts[dirtIndex].emit(GetMotionCenter(binaryMotion));
+			dirts[dirtIndex].emit(mPos);
+			dirts[dirtIndex + 1].emit(mPos);
+			dirts[dirtIndex + 2].emit(mPos);
 			break;
 
 		case brush:
-			bool found = false;
+			found = false;
 			resetTimer();
 			for (unsigned int i = 0; i < dusts.size(); i++) {
 				if (!dusts[i].isAlive()) {
@@ -1186,28 +1431,15 @@ void ofApp::emitParticles() {
 				dustIndex = 0;
 			}
 
-			dusts[dustIndex].emit(GetMotionCenter(binaryMotion));
+			dusts[dustIndex].emit(mPos);
 			break;
 		case none:
-			bool found = false;
-			resetTimer();
-			for (unsigned int i = 0; i < dirts.size(); i++) {
-				if (!dirts[i].isAlive()) {
-					//find index where there is unutilized particle objects
-					dirtIndex = i;
-					found = true;
-					break;
-				}
-			}
-
-			if (!found) {
-				dirts[0].reset();
-				dirtIndex = 0;
-			}
-			dirts[dirtIndex].emit(GetMotionCenter(binaryMotion));
+			
 			break;
 		default:
-			//do nothing
+			break;
+		
+			
 		}
 
 	}
@@ -1215,30 +1447,35 @@ void ofApp::emitParticles() {
 }
 
 void ofApp::particleEffects() {
+	
 	for (unsigned int i = 0; i < dusts.size(); i++) {
-		dusts[i].update();
+		dusts[i].update(mPos);
 	}
 
 	for (unsigned int i = 0; i < dirts.size(); i++) {
-		dirts[i].update();
+		dirts[i].update(mPos);
 	}
 
-	if (emitP) {
+	if (Moved) {
+		//printf("emitP \n");
 		emitParticles();
-	}
-}
-
-ofPoint ofApp::GetMotionCenter(ofxCvGrayscaleImage motion)
-{
-	contourFinder.findContours(motion, 5, (160 * 120) / 4, 4, false, true);
-	
-	float tempmax = 0;
-	int tempi = 0;
-	for (int i = 0; i < contourFinder.nBlobs; i++) {
-		if (tempmax < contourFinder.blobs.at(i).area) {
-			tempmax = contourFinder.blobs.at(i).area;
-			tempi = i;
+		float playPos = ofRandom(0.05, 0.2);
+		if (ToolNow == knife) {
+			if (shali.getPosition() > playPos || !shali.isPlaying()) {
+				shali.play();
+			}
+			
+		}
+		else if (ToolNow == brush) {
+			if (saotu.getPosition() > playPos || !saotu.isPlaying()) {
+				saotu.play();
+			}
 		}
 	}
-	return contourFinder.blobs.at(tempi).centroid;
 }
+
+
+
+
+
+

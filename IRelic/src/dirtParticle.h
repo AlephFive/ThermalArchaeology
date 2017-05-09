@@ -7,12 +7,14 @@ public:
 	dirtParticle();
 
 	void reset();
-	void update();
-	void emit(ofPoint xy);
-	void emit();
+	void update(ofPoint * mPos);
+	void emit(ofPoint *xy);
+	//void emit();
 	void draw();
 	bool isAlive();
+	double gaussrand(double V, double E);
 
+	
 	ofPoint pos;
 	ofPoint vel;
 	ofPoint frc;
@@ -44,5 +46,5 @@ public:
 
 	bool goodVel;
 
-
+	int framelimit;
 };

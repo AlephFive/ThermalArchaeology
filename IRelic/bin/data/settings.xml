@@ -1,0 +1,8 @@
+<group>
+	<Amplify>5</Amplify>
+	<Damping>0.7</Damping>
+	<Threshold>15</Threshold>
+	<Adaptive>0</Adaptive>
+	<AdaptiveThreshold>30</AdaptiveThreshold>
+<group/>
+</group>

@@ -97,11 +97,17 @@ public:
 	float workingPercent = 1.0;//working left percent
 	float healthPercent = 1.0;
 	float toolparaPercent = 0.0;
-	const int healthBarWidth = 800;
-	const int workingBarWidth = 300;
-	const int toolparaBarWidth = 300;
+	 int healthBarWidth = 700;
+	 int workingBarWidth = 260;
+	 int toolparaBarWidth = 260;
 	ToolStyle currentToolStyle;
 	void setup();
+	void reset() {
+		 workingPercent = 1.0;//working left percent
+		 healthPercent = 1.0;
+		 toolparaPercent = 0.0;
+
+	}
 	void update(Process cai, bool finish);
 	void setThres(float x, float y) { thres1 = x; thres2 = y; }
 	void draw();
@@ -124,7 +130,7 @@ class ofApp : public ofBaseApp{
 		//void scrapeParticleEffects();
 		void particleEffects();
 		void emitParticles();
-		ofPoint GetMotionCenter(ofxCvGrayscaleImage motion);
+		
 
 		void keyPressed(int key);
 		void keyReleased(int key);
@@ -141,7 +147,7 @@ class ofApp : public ofBaseApp{
 
 
 		//Kilo start from here
-		ofxCvContourFinder contourFinder;
+
 		/*For Arduino Serial Communication*/
 		
 		//string str;
@@ -169,6 +175,7 @@ class ofApp : public ofBaseApp{
 		ofxToggle Adap;
 		ofxIntSlider outlineth;
 		ofxIntSlider IRthreshold;
+		//ofxIntSlider IRfanwei;
 
 		/****************************       For mask shader         *******************/
 		ofShader shaderMask;
@@ -189,6 +196,9 @@ class ofApp : public ofBaseApp{
 		float times = 6;
 		float shiftx = 160;
 		float shifty = 0;
+		/*****************               PREPARE FOR PARTICLE SYS                       *******************/
+		ofxCvContourFinder contourFinder;
+		ofPoint GetMotionCenter();
 
 		/**************************************   Tool Switch   *******************************************/
 		Tool Dropper, Knife, Brush;
@@ -206,6 +216,14 @@ class ofApp : public ofBaseApp{
 		RelicType relic;
 		Process caitao;
 
+		ofSoundPlayer shali;
+		ofSoundPlayer saotu;
+		ofSoundPlayer kouxue;
+		ofSoundPlayer baojing;
+		ofSoundPlayer daojishi;
+		ofSoundPlayer gamelogicsound;
+		
+
 		//START
 		ofImage startbackground;
 
@@ -217,12 +235,13 @@ class ofApp : public ofBaseApp{
 
 		//GAMEOVER
 		ofImage gameoverbackground;
-		
+		ofTrueTypeFont  appfont;
 		/************************************   Game Data    ***************************************/
+		void resetGameData();
 		const float healthTotal = 5000;
 		float healthLeft=5000;
 		int workingTotal[5] = { 4151,4151,1449,1449,4151 };
-		int workingLeft=1000;
+		int workingLeft;
 
 
 		float forceTotal1= 30;
@@ -230,16 +249,16 @@ class ofApp : public ofBaseApp{
 		float currentForce=0;
 		float safeThres1 = 15;
 		float safeThres2 = 50;
-		void setForce(float total1,float total2, float thres1, float thres2) {
+		void setForce(float total1, float thres1, float total2, float thres2) {
 			forceTotal1 = total1;
 			forceTotal2 = total2;
 			safeThres1 = thres1;
 			safeThres2 = thres2;
 		}
-		float timeLimit = 60.0; //60 seconds
+		float timeLimit = 120.0; //120 seconds
 		float dropperstarttime=0;
 		float droppertimer=0;
-		float changingtimeLimit = 2000;//2seconds 2000millisecs
+		float changingtimeLimit = 4000;//2seconds 2000millisecs
 		float changingstarttime=0;
 		float changingtimer=0;
 		
