@@ -85,6 +85,10 @@ void loop() {
     if(isHeld){
         Serial.print(message);
         //numNotHeld = 0;
+        //digitalWrite(led, HIGH);
+    }
+    else{
+      //digitalWrite(led, LOW);
     }
     /*
     else{
@@ -104,16 +108,19 @@ void loop() {
   static uint32_t blink_period = 0;
   if (throttle_ms(1000, cur_millis, &blink_period)) {
       //Serial.print("ping");
-      if(lighton){
-        // turn the LED off by making the voltage LOW
-        digitalWrite(led, LOW);    
-        lighton = false;
-      }
-      else{
-        // turn the LED on
-        digitalWrite(led, HIGH);    
-        lighton = true;
-      }
+      
+        if(lighton){
+          // turn the LED off by making the voltage LOW
+          digitalWrite(led, LOW);    
+          lighton = false;
+        }
+        else {
+          // turn the LED on
+          digitalWrite(led, HIGH);    
+          lighton = true;
+        }
+      
+      
     
   }
 
@@ -140,7 +147,7 @@ bool throttle_ms(uint32_t period_ms, uint32_t cur_time, uint32_t *prev_period) {
 
 void readCap(){
   capValue = analogRead(capPin);
-    if(capValue < 900){
+    if(capValue < 500){
       isHeld = false;
     }
     else{
